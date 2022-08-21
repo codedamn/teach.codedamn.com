@@ -1,4 +1,6 @@
 {
   "index": "Introduction",
-  "technologies": "Supported technologies"
+  "technologies": "Supported technologies",
+  "technologies/html-css": "HTML/CSS",
+  "technologies/react": "React"
 }
