@@ -62,6 +62,6 @@ export default {
   nextLinks: true,
   footer: true,
   footerEditLink: 'Edit this page on GitHub',
-  footerText: <>MIT {new Date().getFullYear()} © Nextra.</>,
+  footerText: <>Copyright {new Date().getFullYear()} © codedamn. All rights reserved.</>,
   unstable_faviconGlyph: '👋',
 }
