@@ -11,9 +11,9 @@ function getFavicon(size) {
 }
 
 export default {
-	github: 'https://github.com/codedamn/use.codedamn.com',
+	github: 'https://github.com/codedamn/teach.codedamn.com',
 	docsRepositoryBase:
-		'https://github.com/codedamn/use.codedamn.com/blob/master',
+		'https://github.com/codedamn/teach.codedamn.com/blob/master',
 	titleSuffix: ' – codedamn',
 	logo: (
 		<>
@@ -44,8 +44,8 @@ export default {
 			/>
 			<meta name="twitter:card" content="summary_large_image" />
 			{/* <meta name="twitter:image" content="https://nextra.vercel.app/og.png" /> */}
-			<meta name="twitter:site:domain" content="use.codedamn.com" />
-			<meta name="twitter:url" content="https://use.codedamn.com" />
+			<meta name="twitter:site:domain" content="teach.codedamn.com" />
+			<meta name="twitter:url" content="https://teach.codedamn.com" />
 			<meta name="og:title" content="Documentation - codedamn" />
 			{/* <meta name="og:image" content="https://nextra.vercel.app/og.png" /> */}
 			<meta name="apple-mobile-web-app-title" content="Codedamn" />
