@@ -1,3 +1,15 @@
+function getFavicon(size) {
+	if (size === 32) {
+		return 'https://codedamn.com/assets/images/favicons/favicon-32x32.png'
+	} else if (size === 16) {
+		return 'https://codedamn.com/assets/images/favicons/favicon-16x16.png'
+	} else if (size === 96) {
+		return 'https://codedamn.com/assets/images/favicons/favicon-96x96.png'
+	}
+
+	return 'https://codedamn.com/assets/images/favicons/favicon-32x32.png'
+}
+
 export default {
 	github: 'https://github.com/codedamn/use.codedamn.com',
 	docsRepositoryBase:
