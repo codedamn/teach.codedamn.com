@@ -16,15 +16,15 @@ This guide would assume that you already have created an interactive course from
 
 -   Add a new item lab in your course curriculum page
 
-![](../../public/images/lab-arrow.png)
+![](../../public/images/html-css/lab-arrow.png)
 
 -   A new lab item gets added. Click on the edit pencil button on the right. This should open the lab library widget in your instructor panel.
 
-![](../../public/images/lab-library.png)
+![](../../public/images/html-css/lab-library.png)
 
 -   Initially, it will be blank for you. In order to create a new lab, you can click on "Create New Lab" button inside this modal. Once done, it should open the following view:
 
-![](../../public/images/lab-view.png)
+![](../../public/images/html-css/lab-view.png)
 
 This is where you will add metadata to your labs and setup your labs for evaluation. Let's take a look at all the tabs here.
 
@@ -37,7 +37,7 @@ Lab details is the tab where you add two important things:
 
 Once both of them are filled, it would appear as following:
 
-![](../../public/images/lab-details.png)
+![](../../public/images/html-css/lab-details.png)
 
 Let's move to the next tab now.
 
@@ -61,7 +61,7 @@ The following NPM packages (non-exhaustive list) are globally installed:
 -   {'@'}drizzle/store{'@'}1.5.3
 -   ganache-cli{'@'}6.12.2
 
-![Setting a container image](../../public/images/lab-container-image.png)
+![Setting a container image](../../public/images/html-css/lab-container-image.png)
 
 ### Lab Layout
 
@@ -91,7 +91,7 @@ Lab defaults section include how your lab environment boots. It is one of the mo
 
 When a codedamn playground boots, it can setup a filesystem for user by default. You can specify what the starting files could be, by specifying a git repository and a branch name:
 
-![Lab default repository](../../public/images/lab-default-repo.png)
+![Lab default repository](../../public/images/html-css/lab-default-repo.png)
 
 **Important note:** For HTML and CSS playground, we recommend you to fork the following repository and use it as a starter template: [HTML playground starter - codedamn](https://github.com/codedamn-classrooms/html-playground-starter)
 
@@ -105,7 +105,7 @@ This is the biggest advantage of using codedamn for hosting your course too - to
 
 Let's start by setting up challenges.
 
-![](../../public/images/lab-add-challenges.png)
+![](../../public/images/html-css/lab-add-challenges.png)
 
 The interface above can be used to add challenges to your lab. Once you add what you want the users to do in this interface, you can safely click on `Create Lab` button to create your lab.
 
@@ -115,7 +115,7 @@ The interface above can be used to add challenges to your lab. Once you add what
 
 Once you save the lab, you will see a button named `Edit Test File` in the `Evaluation` tab. Click on it.
 
-![](../../public/images/lab-edit-test.png)
+![](../../public/images/html-css/lab-edit-test.png)
 
 When you click on it, a new window will open. This is a test file area.
 
@@ -125,7 +125,7 @@ The point of having a file like this to provide you with a place where you can w
 
 **For HTML/CSS labs, you can use the default test file of Node.js (Puppeteer) evaluation:**
 
-![](../../public/images/lab-test-file-dropdown.png)
+![](../../public/images/html-css/lab-test-file-dropdown.png)
 
 The moment you select the Node.js (Puppeteer), the following code should appear in your editor:
 
@@ -222,11 +222,11 @@ Let us understand what is happening here exactly:
 -   From this point onwards, we have some `try-catch` blocks. But why? Because we want to populate an array `results` and then finally write this array to a file inside environment variable `UNIT_TEST_OUTPUT_FILE`
 -   Let's say, `[true, false]` is written to the file `process.env.UNIT_TEST_OUTPUT_FILE`. In that case, the first challenge would be marked as passed in the IDE, and the second challenge would be marked as failed:
 
-![](../../public/images/playground-tests.png)
+![](../../public/images/html-css/playground-tests.png)
 
 -   Whatever your mapping of final JSON boolean array written in `process.env.UNIT_TEST_OUTPUT_FILE` is, it is matched exactly to the results on the playground. For example, if the array written is `[true, false, true, true]`, the following would be the output on playground:
 
-![](../../public/images/playground-tests-2.png)
+![](../../public/images/html-css/playground-tests-2.png)
 
 -   **Note:** If your `results` array contain less values than challenges added back in the UI, the "extra" UI challenges would automatically stay as "false". If you add more challenges in test file, the results would be ignored. Therefore, it is **important** that the `results.length` is same as the number of challenges you added in the challenges UI.
 
@@ -238,7 +238,7 @@ This completes your evaluation script for the lab. Your lab is now almost ready 
 
 Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
 
-![](../../public/images/lab-run-tests.png)
+![](../../public/images/html-css/lab-run-tests.png)
 
 Since we have already written a pure evaluation script that runs and finally writes the JSON result to the `UNIT_TEST_OUTPUT_FILE` environment, all we have to do is trigger that script via Node.js.
 
@@ -250,7 +250,7 @@ node $TEST_FILE_NAME
 
 This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
 
-![](../../public/images/lab-test-command.png)
+![](../../public/images/html-css/lab-test-command.png)
 
 **Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
 
@@ -258,10 +258,10 @@ This will make sure we run the full Node.js script and write the results properl
 
 Verified solution is highly recommended. To setup a verified solution for your lab, once your lab is ready, all you have to do is click on "Test lab", write code that passes your lab, and run that code once.
 
-![](../../public/images/lab-verified-solutions.png)
+![](../../public/images/html-css/lab-verified-solutions.png)
 
 Once you do that, your lab would be marked a lab having verified solution. It also helps students as we can show them a Monaco diff editor showing the verified solution from the creator (you).
 
-![](../../public/images/playground-verified-solution.png)
+![](../../public/images/html-css/playground-verified-solution.png)
 
 At this point, your lab is complete. You can now link this lab in your course, ready to be served to thousands of students :)
