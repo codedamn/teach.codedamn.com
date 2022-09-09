@@ -1,4 +1,9 @@
 {
-    "html-css": "HTML/CSS",
-    "react": "React"
+	"html-css": "HTML/CSS",
+	"react": "React",
+	"node": "Node.js",
+	"python": "Python",
+	"rust": "Rust",
+	"c": "C",
+	"cpp": "C++"
 }
