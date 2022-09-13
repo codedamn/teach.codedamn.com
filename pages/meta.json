@@ -3,5 +3,6 @@
 	"create-account": "Setup instructor account",
 	"technologies": "Supported technologies",
 	"cdmrc": "Configuration File - .cdmrc",
-	"port-mapping": "Port Mapping"
+	"port-mapping": "Port Mapping",
+	"exam-courses": "Hosting exams"
 }
