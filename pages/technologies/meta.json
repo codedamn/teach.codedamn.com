@@ -2,7 +2,7 @@
 	"html-css": "HTML/CSS",
 	"react": "React",
 	"node": "Node.js",
-	"python": "Python",
+	"python-pytest": "Python (Pytest)",
 	"rust": "Rust",
 	"c": "C",
 	"cpp": "C++"
