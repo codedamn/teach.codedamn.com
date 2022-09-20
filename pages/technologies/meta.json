@@ -5,5 +5,6 @@
 	"python-pytest": "Python (Pytest)",
 	"rust": "Rust",
 	"c": "C",
-	"cpp": "C++"
+	"cpp": "C++",
+	"java-junit": "Java (JUnit)"
 }
