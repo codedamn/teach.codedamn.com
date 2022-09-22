@@ -8,9 +8,7 @@ We'll divide this part into 4 sections:
 2. [Setting up lab defaults](#step-2---lab-defaults)
 3. [Setting up lab challenges](#step-3---lab-challenges)
 4. [Setting up test file](#step-4---test-file)
-5. [Providing custom input to stdin](#step-5---providing-custom-input-to-stdin)
-6. [Reading the output from stdout](#step-6---reading-the-output-from-stdout)
-7. [Setting up evaluation script](#step-7---evaluation-script)
+5. [Setting up evaluation script](#step-7---evaluation-script)
 
 ## Introduction
 
@@ -138,50 +136,33 @@ import java.lang.reflect.Method;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TestFile {
 
-    // IO Streams
-    private static final  ByteArrayOutputStream out = new ByteArrayOutputStream();
-    private static final ByteArrayOutputStream err = new ByteArrayOutputStream();
-    private static ByteArrayInputStream inputStream;
-
-    // Backup Streams
-    private static final PrintStream originalOut = System.out;
-    private static final PrintStream originalErr = System.err;
-    private static final InputStream originalInput = System.in;
-
-
     @BeforeAll
-    public static void setStreams() { // Override all the streams to our custom IO streams
-        System.setOut(new PrintStream(out));
-        System.setErr(new PrintStream(err));
+    public static void setupThings() {
+        // Runs before all the test cases
     }
 
     @AfterAll
-    public static void restoreInitialStreams() { // Restores all the streams to its original backups
-        System.setOut(originalOut);
-        System.setErr(originalErr);
-        System.setIn(originalInput);
-    }
-
-
-    public static void provideInput(String data) { // Used to give and test custom inputs (Use-full for Scanner class)
-        inputStream = new ByteArrayInputStream(data.getBytes());
-        System.setIn(inputStream);
+    public static void doCleanup() {
+        // Runs after all the test cases are executed
     }
 
     @Test
     @Order(1)
     public void test1() {
         try {
-            // provideInput("3\n4\n5\n"); // Give multiple inputs to the user
+
+            /*
+            * Use reflection API for testing
+            * cheatsheet: https://javapapers.com/core-java/java-reflection-cheat-sheet/
+            * This helps in partial test passing
+            */
 
             Class classNameToTest = Class.forName("<Class Name Here>");
             Method methodToTest = classNameToTest.getMethod("< Method Name Here >"); // Optional: Add parameter types as second argument here
 
             var returnedOutput = methodToTest.invoke(null, null); // Give arguments as an array in 2nd parameter
 
-            String outputFromConsole = out.toString(); // Reads the output from the terminal
-
-            assertTrue(true); // Check for the expected output
+            assertEquals(returnedOutput, "Hello World"); // Check for the expected output
 
         } catch(Exception e) {
             fail();
@@ -208,85 +189,7 @@ Let us understand what is happening here exactly:
 
 This completes your evaluation script for the lab. Your lab is now almost ready for users.
 
-## Step 5 - Providing custom input to stdin
-
-In order to provide custom inputs to the program, you can use the pre defined `provideInput()` method that accepts String data and provides input to the program when it requires.
-
-Code Example:
-
-```java
-// Main.java (User's Code)
-
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String args[]) {
-        Scanner scanner = new Scanner(System.in);
-
-        int x = scanner.nextInt();
-        int y = scanner.nextInt();
-
-        System.out.println(x);
-        System.out.println(y);
-    }
-}
-```
-
-```java
-
-// Test File
-
-@Test
-@Order(1)
-public void test1() {
-    try {
-        provideInput("3\n4\n"); // It would assign x = 3 and y = 4 in the above code
-
-        Class classNameToTest = Class.forName("Main");
-        Method methodToTest = classNameToTest.getMethod("main", String[].class); // Optional: Add parameter types as second argument here
-
-        var returnedOutput = methodToTest.invoke(null, (Object) null); // Give arguments as an array in 2nd parameter
-
-        String outputFromConsole = out.toString(); // Reads the output from the terminal
-
-        assertEquals("3\n4\n", outputFromConsole); // Check for the expected output
-
-    } catch(Exception e) {
-        fail();
-    }
-}
-
-```
-
-## Step 6 - Reading the output from stdout
-
-There are situations when you want to validate the output that is being printed on the terminal. For example, If you ask the user to write a simple Java code that prints 'Hello World', and you want to test if the user was able to print it correct or not, in this case you can easily compare the terminals output by the expected output using the `ByteArrayOutputStream`.
-
-In your test() method, you can use the `out.toString()` method from the `out` object declared at the class level to read the output from the terminal and finally do a `assertEquals()` to compare the output.
-
-Sample Code to check `Hello World` program:
-
-```java
-@Test
-@Order(1)
-public void test1() {
-    try {
-        Class classNameToTest = Class.forName("Main");
-        Method methodToTest = classNameToTest.getMethod("main", String[].class); // Optional: Add parameter types as second argument here
-
-        var returnedOutput = methodToTest.invoke(null, (Object) null); // Give arguments as an array in 2nd parameter
-
-        String outputFromConsole = out.toString(); // Reads the output from the terminal
-
-        assertEquals("Hello World\n", outputFromConsole); // Check for the expected output
-
-    } catch(Exception e) {
-        fail();
-    }
-}
-```
-
-## Step 7 - Evaluation Script
+## Step 5 - Evaluation Script
 
 Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
 
