@@ -14,8 +14,8 @@ We'll divide this part into 5 sections:
 1. Creating lab metadata
 2. Setting up lab defaults
 3. Setting up lab challenges
-4. Setting up test file
-5. Setting up evaluation script
+4. Setting up evaluation script
+5. Setting up test file
 
 ## Introduction
 
@@ -84,9 +84,29 @@ You will find a `.cdmrc` file in the repository given to you above. It is highly
 
 <LabChallenges />
 
-## Step 4 - Test file
+## Step 4 - Evaluation Script
 
-Once you save the lab, you will see a button named `Edit Test File` in the `Evaluation` tab. Click on it.
+Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
+
+![](/images/common/lab-run-tests.png)
+
+Since we have already written a pure evaluation script that runs and finally writes the JSON result to the `UNIT_TEST_OUTPUT_FILE` environment, all we have to do is trigger that script via Node.js.
+
+The full path of the script is made available at run-time with another environment variable called `TEST_FILE_NAME`. Therefore, all we have to do is write the following in the evaluation script area:
+
+```bash
+node $TEST_FILE_NAME
+```
+
+This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
+
+![](/images/html-css/lab-test-command.png)
+
+**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
+
+## Step 5 - Test file
+
+You will see a button named `Edit Test File` in the `Evaluation` tab. Click on it.
 
 ![](/images/common/lab-edit-test.png)
 
@@ -206,26 +226,6 @@ Let us understand what is happening here exactly:
 -   We then also add jQuery and chai for assisting with testing. Although it is not required as long as you can populate the `results` array properly.
 
 This completes your evaluation script for the lab. Your lab is now almost ready for users.
-
-## Step 5 - Evaluation Script
-
-Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
-
-![](/images/common/lab-run-tests.png)
-
-Since we have already written a pure evaluation script that runs and finally writes the JSON result to the `UNIT_TEST_OUTPUT_FILE` environment, all we have to do is trigger that script via Node.js.
-
-The full path of the script is made available at run-time with another environment variable called `TEST_FILE_NAME`. Therefore, all we have to do is write the following in the evaluation script area:
-
-```bash
-node $TEST_FILE_NAME
-```
-
-This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
-
-![](/images/html-css/lab-test-command.png)
-
-**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
 
 ## Setup Verified Solution (Recommended)
 
