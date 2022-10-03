@@ -1,9 +1,15 @@
 ---
+sidebar_position: 5
 sidebar_label: Solidity (Hardhat)
 title: How to create an interactive Solidity lab with Hardhat?
 ---
 
-We'll divide this part into 4 sections:
+import LabMetadata from '../_components/LabMetadata.mdx'
+import LabLayout from '../_components/LabLayout.mdx'
+import LabChallenges from '../_components/LabChallenges.mdx'
+import LabVerifiedSolution from '../_components/LabVerifiedSolution.mdx'
+
+We'll divide this part into 5 sections:
 
 1. Creating lab metadata
 2. Setting up lab defaults
@@ -17,7 +23,7 @@ This guide would assume that you already have created an interactive course from
 
 ## Step 1 - Creating lab metadata
 
-..
+<LabMetadata />
 
 ### Lab Details
 
@@ -32,65 +38,116 @@ Let's move to the next tab now.
 
 ### Container Image
 
-Container image should be set as `Python 3.8` for Python labs. The following software are available by default in this image:
+Container image should be set as `Web 3.0` for Solidity labs.
 
--   Python version 3.8
--   Pip 3
--   Packages: pytest and pytest-json-report for Python unit testing
+![Setting a container image](/images/solidity/image-selection.png)
 
-![Setting a container image](/images/python/lab-container-image.png)
-
-We will setup and install a Python environment on the runtime.
+We'll be cloning and using a playground that sets up a Hardhat project from scratch.
 
 ### Lab Layout
 
-Lab layout can be used to set a default layout in which the lab boots. We currently support the following layout types:
-
-#### Terminal + IDE + Browser
-
-This would include everything codedamn has to offer - a terminal at the bottom, an IDE in center (powered by Monaco on desktops, and CodeMirror on mobile phones), and a browser preview of (ideally) what user is working on. This is best if your python playground runs a HTTP server.
-
-#### Terminal + Browser
-
-This layout is for times when you don't need IDE in place, and only want something hosted inside a browser - like a XSS challenge.
-
-#### Terminal + IDE
-
-This layout is for backend programming without website UI. This would only include a terminal and an IDE - like VS Code. For example - headless E2E testing, writing Python scripts, discord bots, etc.
-
-#### Terminal only
-
-This would not include anything, except for a terminal. Best for Linux/bash labs where you want users to exclusively work with terminals only.
-
-_Note: In future, students would be able to change the default layout once the lab as booted._
+<LabLayout />
 
 ## Step 2 - Lab Defaults
 
 Lab defaults section include how your lab environment boots. It is one of the most important parts because a wrong default environment might confuse your students. Therefore it is important to set it up properly.
 
-When a codedamn playground boots, it can setup a filesystem for user by default. You can specify what the starting files could be, by specifying a git repository and a branch name:
+When a codedamn playground boots, it can setup a filesystem for user by default. You can specify what the starting files could be, by specifying a git repository and a branch name.
 
-![Lab default repository](/images/python/lab-default-repo.png)
+:::tip
+For Solidity, we recommend you to fork the following repository and use it as a starter template: [Solidity + Hardhat template - codedamn](https://github.com/codedamn-classrooms/web3-controller)
+:::
 
+:::info
 You will find a `.cdmrc` file in the repository given to you above. It is highly recommend, at this point, that you go through the [.cdmrc guide and how to use .cdmrc in playgrounds](/docs/concepts/cdmrc) to understand what `.cdmrc` file exactly is. Once you understand how to work with `.cdmrc` come back to this area.
+:::
+
+Let us briefly understand what this repository does.
+
+1. It uses hardhat as the toolkit which can be customized from the `hardhat.config.js` file.
+2. Inside of `preview` folder, there is a simple `server.js` file written. This file, alongside `ui.jsx` and `doc.html` provides a very simple UI for the user to manage the contracts.
+3. These contracts are written inside `contracts` folder. They are automatically complied by the `server.js` whenever it changes.
+4. The `.cdmrc` file starts this `preview.js` server and allows user to write smart contracts in-browser while compiling them automatically.
+
+:::info
+You can choose to remove the `preview` folder completely, and customize `.cdmrc` file according to your needs. You can read more about `.cdmrc` [and how to use it here](/docs/concepts/cdmrc).
+:::
 
 ## Step 3 - Lab challenges
 
-Next step is to setup challenges and evaluation for your lab. This is the part where your learners can learn the most because they will have to pass certain challenges.
+<LabChallenges />
 
-This is the biggest advantage of using codedamn for hosting your course too - to make them truly interactive and hands-on for your users.
+## Step 4 - Evaluation Script
 
-Let's start by setting up challenges.
+Evaluation script is the first code that actually runs when the user on the codedamn playground clicks on `Run Tests` button.
 
-![](/images/html-css/lab-add-challenges.png)
+![](/images/common/lab-run-tests.png)
 
-The interface above can be used to add challenges to your lab. Once you add what you want the users to do in this interface, you can safely click on `Create Lab` button to create your lab.
+Remember that we're using the hardhat utility in this lab to test.
 
-**Note:** You **have** to create the lab before moving to next step. This is because you will only get the ability to create evaluation script if your lab is saved at least once.
+Therefore, your testing script would look like as follows:
 
-## Step 4 - Test file
+```bash
+# move the test file to user directory (hardhat testing util requires it)
+mkdir -p $USER_CODE_DIR/test
+mv $TEST_FILE_NAME $USER_CODE_DIR/test
 
-Once you save the lab, you will see a button named `Edit Test File` in the `Evaluation` tab. Click on it.
+# run hardhat testing util assuming we have correct mocha settings
+cd $USER_CODE_DIR
+yarn --silent hardhat test > $UNIT_TEST_OUTPUT_FILE
+
+# run a light node script to extract out results and write them back in expected format
+
+cat > /home/damner/.test/process-results.js << EOF
+const fs = require('fs')
+const fileData = fs.readFileSync(process.env.UNIT_TEST_OUTPUT_FILE, { encoding: 'utf8' })
+const payload = JSON.parse(fileData.slice(fileData.indexOf('{')))
+const answers = payload?.tests?.map((result, i) => {
+    if(result.err.stack) {
+        console.error(result.err.message)
+        return false
+    } else {
+        console.log(\`Test ${i} passed\`)
+        return true
+    }
+}) || []
+fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
+EOF
+
+node /home/damner/.test/process-results.js
+```
+
+You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
+
+1. We initially create a `test` directory inside of the user folder. This is because we'll then run `yarn hardhat test` which requires the tests to be placed inside of the `test` directory.
+2. We move `$TEST_FILE_NAME` inside this directory. `$TEST_FILE_NAME` is a special filename. It is the complete path of a file which is downloaded when the user clicks on `Run Test` button. This file is editable (in the next step).
+3. We then run `yarn --silent hardhat test` and then output it's result into a file contained in env variable `$UNIT_TEST_OUTPUT_FILE`. The value inside this variable maps to a special file that the playground **eventually** reads to determine the status of all the challenges.
+4. We then create a very simple script in JS that reads the output by `hardhat test`. Note that this output is generated by `mocha`. It is important that this output is in JSON. You **have** to make sure that your `hardhat.config.js` is as follows:
+
+```js
+// ...other code
+module.exports = {
+	// ...other code
+	solidity: '0.8.4',
+	mocha: {
+		// * the reporter here needs to be JSON
+		reporter: 'json'
+	}
+}
+```
+
+4. We then convert the JSON result dump into a boolean array and write it back on the same `$UNIT_TEST_OUTPUT_FILE`
+5. This file is then read by the playground, and a corresponding `PASS` or `FAIL` is assigned to every challenge. For example, if we finally wrote `[true, false, false, true]`, this would mean that Challenge 1 passed, Challenge 2 and 3 failed, and Challenge 4 passed.
+
+:::note
+At this point we're yet to write the testing script that is executed by `yarn hardhat test`. We'll do that in the next step now.
+:::
+
+**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your bash script test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
+
+## Step 5 - Test file
+
+You will see a button named `Edit Test File` in the `Evaluation` tab. Click on it.
 
 ![](/images/common/lab-edit-test.png)
 
@@ -100,105 +157,41 @@ You can write anything here. Whatever script you write here, can be executed fro
 
 The point of having a file like this to provide you with a place where you can write your evaluation script.
 
-**Note: For Python labs, I'm assuming you will be using the pre-installed pytest utility to test the user code. Hence, we use the pytest testing format here:**
+:::note
+For Solidity labs, I'm assuming you will be using the `hardhat test` alongside mocha to test the user code. Hence, we use the mocha testing syntax here.
+:::
 
-![](/images/python/lab-edit-test-file.png)
+![](/images/solidity/template-pick.png)
 
-The moment you select the Python (Pytest), the following code should appear in your editor:
+Select `Solidity (Hardhat)`, and the following code should appear in your editor:
 
-```py
-import os
-import sys
-import importlib
-# Make user code files available for dynamic import
-sys.path.append(os.environ.get('USER_CODE_DIR'))
+```js
+const { expect } = require('chai')
 
-# Docs: https://docs.pytest.org/en/6.2.x/getting-started.html#create-your-first-test
+describe('Token contract', function () {
+	it('Deployment should assign the total supply of tokens to the owner', async function () {
+		const [owner] = await ethers.getSigners()
 
-def test_variable1():
-	userscript = importlib.import_module('script')
-	assert userscript.variable1 == 5
+		const Token = await ethers.getContractFactory('Token')
 
-def test_variable2():
-	userscript = importlib.import_module('script')
-	assert userscript.variable2 == 300
+		const hardhatToken = await Token.deploy()
 
+		const ownerBalance = await hardhatToken.balanceOf(owner.address)
+		expect(await hardhatToken.totalSupply()).to.equal(ownerBalance)
+	})
+})
 ```
 
-Let us understand what is happening here exactly:
+This test suite is written how a typical hardhat test suite should be written. You can find how to write hardhat test suites in their own documentation here: [Testing smart contracts with hardhat](https://hardhat.org/tutorial/testing-contracts#5.-testing-contracts)
 
--   We import some required python packages.
--   Then we add `USER_CODE_DIR` to the `PATH` env. `USER_CODE_DIR` string is effectively `/home/damner/code` which in turn is the directory where your students store their coding files (and is also visible in the playground file explorer by default)
--   We start writing tests on how Python pytest library recommends. Check out [pytest documentation](https://docs.pytest.org/en/6.2.x/getting-started.html#create-your-first-test) for more information.
--   We dynamically import the `script.py` using `importlib.import_module('script')`. This is to prevent the test file from crashing other tests in case the script is not there at all.
--   Then we start asserting based on pytest utilities.
+Note:
 
-![](/images/html-css/playground-tests.png)
-
--   The number of `def test_(...)` functions inside your test file suite should match the number of challenges added in the creator area.
-
--   **Note:** If your number of `test` blocks are less than challenges added back in the UI, the "extra" UI challenges would automatically stay as "false". If you add more challenges in test file, the results would be ignored.
+-   There **must** be only 1 `describe` block here (this is an assumption in our evaluation script).
+-   The number of `it(...)` functions inside your test file suite should match the number of challenges added in the instructor Evaluation tab area.
+-   If your number of `it(...)` blocks are less than challenges added back in the UI, the "extra" UI challenges would automatically stay as "false". If you add more challenges in test file, the results would be ignored.
 
 This completes your evaluation script for the lab. Your lab is now almost ready for users.
 
-## Step 5 - Evaluation Script
-
-Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
-
-![](/images/html-css/lab-run-tests.png)
-
-Remember that we're using the Pytest utility in this lab to test.
-
-Therefore, your testing script would look like as follows:
-
-```bash
-#!/bin/bash
-set -e 1
-
-mkdir -p /home/damner/code/__labtests
-
-mv $TEST_FILE_NAME /home/damner/code/__labtests/pytest.py
-
-# process results file
-cat > /home/damner/code/__labtests/processPythonResults.js << EOF
-const payload = require('./.report.json')
-const answers = payload.tests.map(test => test.outcome === 'passed')
-require('fs').writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
-EOF
-
-# run test
-python3 -m pytest --json-report /home/damner/code/__labtests/pytest.py || true
-
-# Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/__labtests/processPythonResults.js
-```
-
-You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
-
--   With `set -e 1` we effectively say that the script should stop on any errors
--   You can install additional packages here if you want. They would only be installed the first time user runs the test. On subsequent runs, it can reuse the installed packages (since they are not removed at the end of testing)
--   Then we create a `__labtests` folder inside of the `/home/damner/code` user code directory. Note that `__labtests` is a special folder that can be used to place your test code. This folder will not be visible in the file explorer user sees, and the files placed in this folder are not "backed up to cloud" for user.
--   We move the test file you wrote earlier (in last step) to `/home/damner/code/__labtests/pytest.py`.
--   We then create another setup file `/home/damner/code/__labtests/processPythonResults.js`. This is because we need to parse the results outputted by the Python testing utility to reflect it on the playgrounds. You may as well create this file in python (reading the JSON report and outputting a boolean array in a file stored in env `$UNIT_TEST_OUTPUT_FILE`)
--   This is important because on the playground page, the way challenges work, is that they get green or red based on a JSON boolean array written inside the file in environment variable: `$UNIT_TEST_OUTPUT_FILE`
--   For example, once the test run suceeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
-
-![](/images/html-css/playground-tests-2.png)
-
--   Then we run the actual test using `python3 -m pytest` command, specifying the output as JSON (read by `processPythonResults.js`) and in a single thread (as we want ordered results).
-
--   Finally we run the `processPythonResults.js` file that writes the correct JSON boolean array on `$UNIT_TEST_OUTPUT_FILE` which is then read by the playground UI and marks the lab challenges as pass or fail.
-
-**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your bash script test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
-
 ## Setup Verified Solution (Recommended)
 
-Verified solution is highly recommended. To setup a verified solution for your lab, once your lab is ready, all you have to do is click on "Test lab", write code that passes your lab, and run that code once.
-
-![](/images/html-css/lab-verified-solutions.png)
-
-Once you do that, your lab would be marked a lab having verified solution. It also helps students as we can show them a Monaco diff editor showing the verified solution from the creator (you).
-
-![](/images/html-css/playground-verified-solution.png)
-
-At this point, your lab is complete. You can now link this lab in your course, ready to be served to thousands of students :)
+<LabVerifiedSolution />
