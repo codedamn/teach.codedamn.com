@@ -221,7 +221,7 @@ Let us understand what is happening here exactly:
 -   Remember that we can code anything in this file and then execute it later. In this example, we're writing a Node.js script from scratch.
 -   Remember that we already have puppeteer with headless chrome pre-installed in codedamn playgrounds for HTML/CSS. Therefore, we can import it directly.
 -   In the first part of `run` function, we start a headless puppeteer browser.
--   We then visit `http://localhost:1337`. At this point, I would highly recommend you to read [How port mapping works for codedamn playgrounds](<(/docs/concepts/port-mapping)>), if you haven't yet.
+-   We then visit `http://localhost:1337`. At this point, I would highly recommend you to read [How port mapping works for codedamn playgrounds](/docs/concepts/port-mapping), if you haven't yet.
 -   From this point onwards, we have some `try-catch` blocks. But why? Because we want to populate an array `results` and then finally write this array to a file inside environment variable `UNIT_TEST_OUTPUT_FILE`
 -   Let's say, `[true, false]` is written to the file `process.env.UNIT_TEST_OUTPUT_FILE`. In that case, the first challenge would be marked as passed in the IDE, and the second challenge would be marked as failed:
 
