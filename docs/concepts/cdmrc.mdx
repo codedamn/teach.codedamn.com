@@ -7,19 +7,19 @@ There are only a few key-value pairs you can specify in this file. They are docu
 ## Creating Terminals
 
 ```yaml
-terminal-one: echo "hello"
-terminal-two: echo "world"
-terminal-three: echo "user"
+terminals: ["echo one", "echo two", "echo three"]
 ```
 
-The config above will start three terminals as soon as your playground boots. Note that these commands run only once the playground is booted. This means that if you invite collaborators to your playground, and you're already on that same playground (that already has executed these commands), they will **not** run again.
+The `terminals` key can be use to execute commands in the terminal instances. You can boot up to **6** terminals instances. The `terminals` array in the `.cdmrc` can only contain 6 elements in them.
 
-Currently, you can only specify commands for up to three terminals (with keys `terminal-one`, `terminal-two` and `terminal-three`)
+The above config will create 3 terminals and execute the commands `echo one`, `echo two` and `echo three` in them. The config above will start three terminals as soon as your playground boots. Note that these commands run only once the playground is booted. This means that if you invite collaborators to your playground, and you're already on that same playground (that already has executed these commands), they will **not** run again.
+
+Note that the terminals will not execute in the same order as given in the array, the order of the terminal tabs is based on the execution time of the commands. The terminal that executes the command first will be the first tab, and so on.
 
 ## Default Files
 
 ```yaml
-tabs: ['src/index.html', 'src/folder/script1.js', 'README.md']
+tabs: ["src/index.html", "src/folder/script1.js", "README.md"]
 ```
 
 The `tabs` field in the `.cdmrc` is an array of strings. Once specified, whenever your playground boots for the first time - it would open the mentioned files by default in the Monaco editor.
@@ -52,8 +52,8 @@ run-button: node $$file
 
 The `run-button` command in a playground does two things:
 
--   It makes a new button saying "Run Code" visible on your playground.
--   When you click on that "Run Code" button - it executes that command in the first terminal. However, we **automatically** run a **CTRL + C** sequence as well to terminate any previously running program. Therefore, anything running in the foreground on your first terminal would get terminated.
+- It makes a new button saying "Run Code" visible on your playground.
+- When you click on that "Run Code" button - it executes that command in the first terminal. However, we **automatically** run a **CTRL + C** sequence as well to terminate any previously running program. Therefore, anything running in the foreground on your first terminal would get terminated.
 
 This is especially useful when you're working with, say, a program that requires you to run the same command over and over again. You can open a C++ playground on codedamn and configure the command as `gcc script.c -o script && ./script` and every time you click on `Run Code` button, it'll execute this script.
 
@@ -84,5 +84,5 @@ terminal-three: echo "we're ready"
 browser-link: https://wikipedia.org
 run-button: clear && node $$file
 live-reload-browser: false
-tabs: ['README.md']
+tabs: ["README.md"]
 ```
