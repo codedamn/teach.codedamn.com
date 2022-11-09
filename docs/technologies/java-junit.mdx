@@ -14,9 +14,8 @@ We'll divide this part into 5 sections:
 2. Setting up lab defaults
 3. Setting up lab challenges
 4. Setting up test file
-5. Providing custom input to stdin
-6. Reading the output from stdout
-7. Setting up evaluation script
+5. Reading the output from stdout
+6. Setting up evaluation script
 
 ## Introduction
 
@@ -151,63 +150,7 @@ Let us understand what is happening here exactly:
 
 This completes your evaluation script for the lab. Your lab is now almost ready for users.
 
-## Step 5 - Providing custom input to stdin
-
-In order to provide custom inputs to the program, you can use the `provideInput()` method that accepts String data and provides input to the program when it requires.
-
-Code Example:
-
-```java
-// Main.java (User's Code)
-
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String args[]) {
-        Scanner scanner = new Scanner(System.in);
-
-        int x = scanner.nextInt();
-        int y = scanner.nextInt();
-
-        System.out.println(x);
-        System.out.println(y);
-    }
-}
-```
-
-```java
-
-// Test File
-
-private static ByteArrayInputStream inputStream;
-
-
-public static void provideInput(String data) { // Used to give and test custom inputs (Use-full for Scanner class)
-    inputStream = new ByteArrayInputStream(data.getBytes());
-    System.setIn(inputStream);
-}
-
-@Test
-@Order(1)
-public void test1() {
-    try {
-        provideInput("3\n4\n"); // It would assign x = 3 and y = 4 in the above code
-
-        Class classNameToTest = Class.forName("Main");
-        Method methodToTest = classNameToTest.getMethod("main", String[].class); // Optional: Add parameter types as second argument here
-
-        var returnedOutput = methodToTest.invoke(null, (Object) null); // Give arguments as an array in 2nd parameter
-
-        assertEquals("3\n4\n", returnedOutput); // Check for the expected output
-
-    } catch(Exception e) {
-        fail();
-    }
-}
-
-```
-
-## Step 6 - Reading the output from stdout
+## Step 5 - Reading the output from stdout
 
 There are situations when you want to validate the output that is being printed on the terminal. For example, If you ask the user to write a simple Java code that prints 'Hello World', and you want to test if the user was able to print it correct or not, in this case you can easily compare the terminals output by the expected output using the `ByteArrayOutputStream`.
 
@@ -276,7 +219,7 @@ class TestFile {
 }
 ```
 
-## Step 7 - Evaluation Script
+## Step 6 - Evaluation Script
 
 Evaluation script is actually what runs when the user on the codedamn playground clicks on "Run Tests" button.
 
