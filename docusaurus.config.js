@@ -24,7 +24,7 @@ const config = {
 	// to replace "en" with "zh-Hans".
 	i18n: {
 		defaultLocale: 'en',
-		locales: ['en']
+		locales: ['en'],
 	},
 
 	presets: [
@@ -34,21 +34,21 @@ const config = {
 			({
 				gtag: {
 					anonymizeIP: true,
-					trackingID: 'G-G9PKB6P5RP'
+					trackingID: 'G-G9PKB6P5RP',
 				},
 				docs: {
 					sidebarPath: require.resolve('./sidebars.js'),
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
 					editUrl:
-						'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+						'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
 				},
 				blog: false,
 				theme: {
-					customCss: require.resolve('./src/css/custom.css')
-				}
-			})
-		]
+					customCss: require.resolve('./src/css/custom.css'),
+				},
+			}),
+		],
 	],
 
 	themeConfig:
@@ -58,27 +58,32 @@ const config = {
 				title: 'codedamn',
 				logo: {
 					alt: 'codedamn',
-					src: 'img/logo.svg'
+					src: 'img/logo.svg',
 				},
 				items: [
 					{
 						type: 'doc',
 						docId: 'intro',
 						position: 'left',
-						label: 'Instructor Documentation'
+						label: 'Instructor Documentation',
+					},
+					{
+						href: '/marketing',
+						position: 'left',
+						label: 'Marketing your course',
 					},
 					{
 						href: 'https://github.com/codedamn/teach.codedamn.com',
 						label: 'GitHub',
-						position: 'right'
-					}
-				]
+						position: 'right',
+					},
+				],
 			},
 			prism: {
 				theme: lightCodeTheme,
-				darkTheme: darkCodeTheme
-			}
-		})
+				darkTheme: darkCodeTheme,
+			},
+		}),
 }
 
 module.exports = config
