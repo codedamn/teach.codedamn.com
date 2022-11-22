@@ -65,7 +65,12 @@ const config = {
 						type: 'doc',
 						docId: 'intro',
 						position: 'left',
-						label: 'Instructor Documentation',
+						label: 'Full Documentation',
+					},
+					{
+						href: '/docs/instructor-guides/setup-course',
+						position: 'left',
+						label: 'Building a course',
 					},
 					{
 						href: '/marketing',
