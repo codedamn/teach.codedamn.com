@@ -62,20 +62,24 @@ const config = {
 				},
 				items: [
 					{
-						type: 'doc',
-						docId: 'intro',
-						position: 'left',
-						label: 'Full Documentation',
-					},
-					{
 						href: '/docs/instructor-guides/setup-course',
 						position: 'left',
 						label: 'Building a course',
 					},
 					{
+						href: '/docs/technologies',
+						position: 'left',
+						label: 'Building labs',
+					},
+					{
 						href: '/marketing',
 						position: 'left',
 						label: 'Marketing your course',
+					},
+					{
+						href: '/docs/concepts',
+						position: 'left',
+						label: 'Playground concepts',
 					},
 					{
 						href: 'https://github.com/codedamn/teach.codedamn.com',
