@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const config = {
 	title: 'Codedamn Instructor Hub',
 	tagline: 'Build and sell high quality interactive coding courses',
-	url: 'https://codedamn.com',
+	url: 'https://teach.codedamn.com',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
