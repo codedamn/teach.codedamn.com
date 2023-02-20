@@ -2,6 +2,7 @@ export default {
 	title: 'Codedamn Docs',
 	description: 'Build interactive coding courses on codedamn',
 	lastUpdated: true,
+	base: '/docs',
 	cleanUrls: true,
 	themeConfig: {
 		editLink: {
