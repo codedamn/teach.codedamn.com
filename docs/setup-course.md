@@ -103,4 +103,4 @@ Take a look on how it can be done in this screenshot:
 
 ![](/images/guides/build-course/curriculum-builder.png)
 
-There is extensive documentation on [how to setup labs](/docs/technologies) and videos. All the best building a great course!
+There is extensive documentation on [how to setup labs](/docs/crash-course) and videos. All the best building a great course!
