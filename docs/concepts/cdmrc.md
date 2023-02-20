@@ -7,7 +7,7 @@ There are only a few key-value pairs you can specify in this file. They are docu
 ## Creating Terminals
 
 ```yaml
-terminals: ["echo one", "echo two", "echo three"]
+terminals: ['echo one', 'echo two', 'echo three']
 ```
 
 The `terminals` key can be use to execute commands in the terminal instances. You can boot up to **6** terminals instances. The `terminals` array in the `.cdmrc` can only contain 6 elements in them.
@@ -19,7 +19,7 @@ Note that the terminals will not execute in the same order as given in the array
 ## Default Files
 
 ```yaml
-tabs: ["src/index.html", "src/folder/script1.js", "README.md"]
+tabs: ['src/index.html', 'src/folder/script1.js', 'README.md']
 ```
 
 The `tabs` field in the `.cdmrc` is an array of strings. Once specified, whenever your playground boots for the first time - it would open the mentioned files by default in the Monaco editor.
@@ -44,6 +44,18 @@ Therefore, you can disable platform-level live reloading using the syntax shown 
 
 The TL;DR of this block is - if you feel the embedded webview on your playground is refreshing on every change, you can disable it setting `live-reload-browser` as `false`
 
+## Playground view
+
+```yaml
+playground-view: terminal-editor-browser
+```
+
+There are three possible views for playground you can specify in this configuration:
+
+-   `terminal-editor-browser`: This view includes terminal, editor and browser preview. It is the best and recommended view if you intend to use a frontend webserver to display output.
+-   `terminal-editor`: This view includes a terminal and an editor only. It is good for programming where no web server is involved. For example, writing a sorting algorithm in C++ may not need a web server output.
+-   `terminal-browser`: This view includes only the terminal and browser. You can combine it with `browser-link` too.
+
 ## Run button
 
 ```yaml
@@ -52,8 +64,8 @@ run-button: node $$file
 
 The `run-button` command in a playground does two things:
 
-- It makes a new button saying "Run Code" visible on your playground.
-- When you click on that "Run Code" button - it executes that command in the first terminal. However, we **automatically** run a **CTRL + C** sequence as well to terminate any previously running program. Therefore, anything running in the foreground on your first terminal would get terminated.
+-   It makes a new button saying "Run Code" visible on your playground.
+-   When you click on that "Run Code" button - it executes that command in the first terminal. However, we **automatically** run a **CTRL + C** sequence as well to terminate any previously running program. Therefore, anything running in the foreground on your first terminal would get terminated.
 
 This is especially useful when you're working with, say, a program that requires you to run the same command over and over again. You can open a C++ playground on codedamn and configure the command as `gcc script.c -o script && ./script` and every time you click on `Run Code` button, it'll execute this script.
 
@@ -84,5 +96,5 @@ terminal-three: echo "we're ready"
 browser-link: https://wikipedia.org
 run-button: clear && node $$file
 live-reload-browser: false
-tabs: ["README.md"]
+tabs: ['README.md']
 ```
