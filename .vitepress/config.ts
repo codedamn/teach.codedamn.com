@@ -39,6 +39,10 @@ export default {
 				collapsed: false,
 				items: [
 					{
+						text: 'Playgrounds in Article',
+						link: '/docs/instructor-guides/playground-in-article',
+					},
+					{
 						text: 'Regular Quiz',
 						link: '/docs/instructor-guides/add-quiz',
 					},
