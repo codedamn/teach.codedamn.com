@@ -21,16 +21,34 @@ export default {
 						link: '/docs/why-interactive',
 					},
 					{
-						text: 'Setup a course',
-						link: '/docs/setup-course',
-					},
-					{
 						text: 'Create an instructor account',
 						link: '/docs/create-account',
 					},
 					{
+						text: 'Setup a course',
+						link: '/docs/setup-course',
+					},
+					{
 						text: 'Crash course [Important]',
 						link: '/docs/crash-course',
+					},
+				],
+			},
+			{
+				text: 'Playground Concepts',
+				collapsed: false,
+				items: [
+					{
+						text: '.cdmrc file',
+						link: '/docs/concepts/cdmrc',
+					},
+					{
+						text: 'Environment Variables',
+						link: '/docs/concepts/environment-variables',
+					},
+					{
+						text: 'Port Mapping',
+						link: '/docs/concepts/port-mapping',
 					},
 				],
 			},
@@ -106,24 +124,7 @@ export default {
 					},
 				],
 			},
-			{
-				text: 'Playground Concepts',
-				collapsed: false,
-				items: [
-					{
-						text: '.cdmrc file',
-						link: '/docs/concepts/cdmrc',
-					},
-					{
-						text: 'Environment Variables',
-						link: '/docs/concepts/environment-variables',
-					},
-					{
-						text: 'Port Mapping',
-						link: '/docs/concepts/port-mapping',
-					},
-				],
-			},
+
 		],
 
 		footer: {
