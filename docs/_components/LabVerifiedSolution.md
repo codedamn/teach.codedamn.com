@@ -1,4 +1,4 @@
-Hello WorldVerified solution is highly recommended. To setup a verified solution for your lab, once your lab is ready, all you have to do is click on "Test lab", write code that passes your lab, and run that code once.
+Verified solution is highly recommended. To setup a verified solution for your lab, once your lab is ready, all you have to do is click on "Test lab", write code that passes your lab, and run that code once.
 
 ![](/images/html-css/lab-verified-solutions.png)
 
