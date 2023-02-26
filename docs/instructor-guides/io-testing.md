@@ -31,13 +31,13 @@ You can use the description area to setup the Instructors for the lab. Mention a
 
 Clicking on the lab icon in the sidebar of the I/O Lab will take you to the most important part of the lab. Selecting Languages for the Lab.
 
-You would see a two set of options in the sidebar. The first set `Allowed Langauges` - are the set of the languages that the student will be able to solve your lab in. You can check all the languages, if you wish to provide the option for the student to write code in any language.
+You would see a two set of options in the sidebar. The first set `Allowed Languages` - are the set of the languages that the student will be able to solve your lab in. You can check all the languages, if you wish to provide the option for the student to write code in any language.
 
 If you're creating a course on the specific language, make sure to select the applicable language only.
 
-The second set of options `Available verified soultions` - decide in which languages the verified solution will be written in. As a creator you choosing one language here is enough, however if you wish to write a solution in all available languages, you can do it.
+The second set of options `Available verified solutions` - decide in which languages the verified solution will be written in. As a creator you choosing one language here is enough, however if you wish to write a solution in all available languages, you can do it.
 
-The last input item of this section would be `Solution to generate output` - this is an imporant part of the I/O. Here you're determining which verified solution should be used to generate the output for the test cases in.
+The last input item of this section would be `Solution to generate output` - this is an important part of the I/O. Here you're determining which verified solution should be used to generate the output for the test cases in.
 
 We'll be selecting `Python` for this guide.
 
@@ -47,7 +47,7 @@ You would see that a two new files have opened up on your right side of the scre
 
 ### 5. Setting up verified solution
 
-Once you've selected the languages for the verfied solution, you should be able to see two files in the text editor on the right side of your screen.
+Once you've selected the languages for the verified solution, you should be able to see two files in the text editor on the right side of your screen.
 
 Both of the files will be having the same name, but one file would be part of the solution folder like `solution/main.py`. This file would contain the verified solution for the challenges. Now it's time to write the solution for the challenge
 

@@ -26,7 +26,7 @@ The `tabs` field in the `.cdmrc` is an array of strings. Once specified, wheneve
 
 This is for a good UX when users don't know what should be a good entry point for the project.
 
-We at codedamn do this on our codelabs and some default playground repos. You can customize this behavior or disable it completely by passing an empty array `[]` or just removing the key altogether.
+We at codedamn do this on our exercise labs and some default playground repos. You can customize this behavior or disable it completely by passing an empty array `[]` or just removing the key altogether.
 
 ## Live browser reloading
 
@@ -52,7 +52,7 @@ playground-view: terminal-editor-browser
 
 There are three possible views for playground you can specify in this configuration:
 
--   `terminal-editor-browser`: This view includes terminal, editor and browser preview. It is the best and recommended view if you intend to use a frontend webserver to display output.
+-   `terminal-editor-browser`: This view includes terminal, editor and browser preview. It is the best and recommended view if you intend to use a frontend web server to display output.
 -   `terminal-editor`: This view includes a terminal and an editor only. It is good for programming where no web server is involved. For example, writing a sorting algorithm in C++ may not need a web server output.
 -   `terminal-browser`: This view includes only the terminal and browser. You can combine it with `browser-link` too.
 
@@ -89,12 +89,10 @@ Here's a dummy config file that uses all the options we have currently:
 
 ```yaml
 # terminals
-terminal-one: cd client yarn && yarn start
-terminal-two: cd server yarn && yarn dev
-terminal-three: echo "we're ready"
+terminals: ["cd client && yarn && yarn start","cd server && yarn && yarn dev","echo \"We're ready\""]
 # other config
-browser-link: https://wikipedia.org
+tabs: ['README.md']
 run-button: clear && node $$file
 live-reload-browser: false
-tabs: ['README.md']
+browser-link: https://wikipedia.org
 ```

@@ -204,7 +204,7 @@ You might need to have a little understanding of bash scripting. Let us understa
 -   We then create another setup file `/home/damner/code/__labtests/setup.js` with just `jsdom` as the import. This is because vitest can then use JSDOM to parse the DOM without browser. More information about this [setup file can be found in vitest docs here](https://vitest.dev/config/#setupfiles).
 -   We then also create a custom vite config file as `config.js`. This is because we don't want to override your (or users') custom `vite.config.js` file if present. This file only loads `jsdom` and marks the `globals: true` hence importing `describe`, `test`, etc. automatically available without importing. More information about the configuration can be found here in [vitest docs](https://vitest.dev/config/#globals).
 -   We then create a `process.js` file that can be used to process our results into a single file of boolean values. This is important because on the playground page, the way challenges work, is that they get green or red based on a JSON boolean array written inside the file in environment variable: `$UNIT_TEST_OUTPUT_FILE`
--   For example, once the test run suceeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
+-   For example, once the test run succeeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
 
 ![](/images/html-css/playground-tests-2.png)
 
