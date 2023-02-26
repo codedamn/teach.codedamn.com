@@ -28,7 +28,7 @@ Setting up video mode is easy.
 -   Video Library popup would open. If you do not have existing video uploaded you want to link it with, you can upload the video for processing from `Upload Video(s)` button on top right.
 
 :::info
-If you upload fresh set of videos, it might take all of them upto 1 hour for it to process and be ready for linking.
+If you upload fresh set of videos, it might take all of them up to 1 hour for it to process and be ready for linking.
 :::
 
 -   Once you link your video, save your lab. You're ready to go.

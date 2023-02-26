@@ -150,7 +150,7 @@ You might need to have a little understanding of bash scripting. Let us understa
 -   We move the test file you wrote earlier (in last step) to `/home/damner/code/__labtests/pytest.py`.
 -   We then create another setup file `/home/damner/code/__labtests/processPythonResults.js`. This is because we need to parse the results outputted by the Python testing utility to reflect it on the playgrounds. You may as well create this file in python (reading the JSON report and outputting a boolean array in a file stored in env `$UNIT_TEST_OUTPUT_FILE`)
 -   This is important because on the playground page, the way challenges work, is that they get green or red based on a JSON boolean array written inside the file in environment variable: `$UNIT_TEST_OUTPUT_FILE`
--   For example, once the test run suceeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
+-   For example, once the test run succeeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
 
 ![](/images/html-css/playground-tests-2.png)
 

@@ -51,7 +51,7 @@ If you're not part of the codedamn creator server, you're missing out! Our offic
 
 ### Move your full video course on codedamn
 
-Codedamn brings its own video processing pipleine to process videos in multiple qualities for users and deliver them at scale. It is easy to upload videos inside your instructor dashboard.
+Codedamn brings its own video processing pipeline to process videos in multiple qualities for users and deliver them at scale. It is easy to upload videos inside your instructor dashboard.
 
 #### Step 1
 
