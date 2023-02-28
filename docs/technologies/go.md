@@ -63,19 +63,64 @@ Evaluation script is actually what runs when the user on the codedamn playground
 
 ![](/images/common/lab-run-tests.png)
 
-Since we have already written a pure evaluation script that runs and finally writes the JSON result to the `UNIT_TEST_OUTPUT_FILE` environment, all we have to do is trigger that script via Node.js.
-
-The full path of the script is made available at run-time with another environment variable called `TEST_FILE_NAME`. Therefore, all we have to do is write the following in the evaluation script area:
+We have to write a boolean array to the file `$UNIT_TEST_OUTPUT_FILE`. Since go already has a builtin testing utility, we can use that as follows:
 
 ```sh
-node $TEST_FILE_NAME
+#!/bin/bash
+set -e 1
+
+mv $TEST_FILE_NAME /home/damner/code/codedamn_evaluation_test.go
+
+# run test
+cd /home/damner/code
+go mod init codedamn # assuming you used "codedamn" as the package
+go test -json -parallel 1 > codedamn_evaluation_output.json
+
+# process results file
+cat > processGoResults.js << EOF
+const fs = require('fs')
+
+// Read the test results file into memory as a string
+const testResults = fs.readFileSync('./codedamn_evaluation_output.json', 'utf8').filter(Boolean)
+const lines = testResults.split('\n')
+
+// Create an empty array to store the pass/fail status of each test
+const results = []
+
+// Loop through each line and parse it as JSON and check if it is a result line
+lines.forEach(line => {
+  const output = JSON.parse(line).Output?.trim()
+  const valid = output === 'PASS' || output === 'FAIL'
+  if(!valid) return
+
+  const passed = output === 'PASS'
+
+  // Add the pass/fail status to the array
+  results.push(passed)
+})
+
+// Write results
+fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(results))
+EOF
+
+# process results
+node processGoResults.js
+
+# remove files
+rm /home/damner/code/codedamn_evaluation_test.go codedamn_evaluation_output.json processGoResults.js
 ```
 
-This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
+Let's explain what's going on here:
 
-![](/images/html-css/lab-test-command.png)
+-   We copy our test script (that we will write in next step) in the same directory as user code `/home/damner/code`. This way we can access user packages comfortably.
+-   We run `go mod init` since `go.mod` file is required to be present when you run `go test` utility. If you have already created a `go.mod` file (in the default repository file setup), this command would do nothing
+-   We now run `go test` with `-json` and `-parallel 1` flag. We need `json` flag as we will parse it using a simple Node.js script written later. You can use Go for that parsing too (if you can write an equivalent). We need `-parallel 1` so that we process the tests in correct order (since the mapping of the boolean array here is linked to how tests would appear on frontend).
+-   Go's test util output is stored in a file called `codedamn_evaluation_output.json`. This file technically is not a valid JSON since Go streams all output as individual JSON objects.
+-   We finally run the Node.js script that splits the file `codedamn_evaluation_output.json` by newline. We parse individual lines as JSON and only process the objects where the `.Output` field in JSON is either `PASS` or `FAIL`.
+-   Since we have `-parallel 1`, the output order would be preserved on how you wrote the tests.
+-   We store this boolean array into the `$UNIT_TEST_OUTPUT_FILE` which is then visible to the end user.
 
-**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
+**Note:** Be careful with the package imports in go, package name and test file location.
 
 ## Step 5 - Test file
 
@@ -87,118 +132,22 @@ When you click on it, a new window will open. This is a test file area.
 
 You can write anything here. Whatever script you write here, can be executed from the `Test command to run section` inside the evaluation tab we were in earlier.
 
-The point of having a file like this to provide you with a place where you can write your evaluation script.
+The point of having a file like this to provide you with a place where you can write your evaluation script. As we decided earlier, you can write a simple Go test here:
 
-**For HTML/CSS labs, you can use the default test file of Node.js (Puppeteer) evaluation:**
+```go
+package codedamn
 
-![](/images/html-css/lab-test-file-dropdown.png)
+import "testing"
 
-The moment you select the Node.js (Puppeteer), the following code should appear in your editor:
-
-```js
-// !! Boilerplate code starts
-const fs = require('fs')
-const puppeteer = require('puppeteer')
-
-async function run() {
-	// results is a boolean[] that maps challenge results shown to user
-	const results = []
-
-	// launch the headless browser for testing
-	const browser = await puppeteer.launch({
-		executablePath: '/usr/bin/google-chrome',
-		headless: true,
-		args: [
-			'--no-sandbox',
-			'--disable-setuid-sandbox',
-			'--disable-dev-shm-usage',
-			'--disable-accelerated-2d-canvas',
-			'--no-first-run',
-			'--no-zygote',
-			'--single-process',
-			'--disable-gpu',
-		],
-	})
-	page = await browser.newPage()
-
-	// wait for server to come online
-	await page.goto('http://localhost:1337')
-
-	// add jQuery and chai for unit testing support if you want
-	await Promise.all([
-		page.addScriptTag({
-			url: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
-		}),
-		page.addScriptTag({
-			url: 'https://cdnjs.cloudflare.com/ajax/libs/chai/4.2.0/chai.min.js',
-		}),
-	])
-
-	// !! Boilerplate code ends
-
-	// Start your tests here in individual try-catch block
-
-	try {
-		await page.evaluate(async () => {
-			const assert = window.chai.assert
-			assert(
-				document.body.innerHTML.toLowerCase().includes('hello world')
-			)
-		})
-		console.log('Test #1 passed!')
-		results.push(true)
-	} catch (error) {
-		console.log('Test #1 failed! Did you do <this>?')
-		results.push(false)
-	}
-
-	try {
-		await page.evaluate(async () => {
-			const assert = window.chai.assert
-			assert(
-				document.body.innerHTML
-					.toLowerCase()
-					.includes('hello world again')
-			)
-		})
-		console.log('Test #1 passed!')
-		results.push(true)
-	} catch (error) {
-		console.log('Test #1 failed! Did you do <this>?')
-		results.push(false)
-	}
-
-	// End your tests here
-	fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(results))
-	await browser.close().catch((err) => {})
-
-	// Exit the process
-	process.exit(0)
+func TestAdd(t *testing.T) {
+    got := add(2, 3)
+    if got != 5 {
+        t.Errorf("add(2, 3) = %d; want 5", got)
+    }
 }
-run()
-// !! Boilerplate code ends
 ```
 
-Let us understand what is happening here exactly:
-
--   Remember that we can code anything in this file and then execute it later. In this example, we're writing a Node.js script from scratch.
--   Remember that we already have puppeteer with headless chrome pre-installed in codedamn playgrounds for HTML/CSS. Therefore, we can import it directly.
--   In the first part of `run` function, we start a headless puppeteer browser.
--   We then visit `http://localhost:1337`. At this point, I would highly recommend you to read [How port mapping works for codedamn playgrounds](/docs/concepts/port-mapping), if you haven't yet.
--   From this point onwards, we have some `try-catch` blocks. But why? Because we want to populate an array `results` and then finally write this array to a file inside environment variable `UNIT_TEST_OUTPUT_FILE`
--   Let's say, `[true, false]` is written to the file `process.env.UNIT_TEST_OUTPUT_FILE`. In that case, the first challenge would be marked as passed in the IDE, and the second challenge would be marked as failed:
-
-![](/images/html-css/playground-tests.png)
-
--   Whatever your mapping of final JSON boolean array written in `process.env.UNIT_TEST_OUTPUT_FILE` is, it is matched exactly to the results on the playground. For example, if the array written is `[true, false, true, true]`, the following would be the output on playground:
-
-![](/images/html-css/playground-tests-2.png)
-
--   **Note:** If your `results` array contain less values than challenges added back in the UI, the "extra" UI challenges would automatically stay as "false". If you add more challenges in test file, the results would be ignored. Therefore, it is **important** that the `results.length` is same as the number of challenges you added in the challenges UI.
-
--   We then also add jQuery and chai for assisting with testing. Although it is not required as long as you can populate the `results` array properly.
-
-This completes your evaluation script for the lab. Your lab is now almost ready for users.
+This file contains only one test at the moment that would give JSON output stream that will be processed further by our Node.js script earlier. This completes your evaluation script for the lab. Your lab is now almost ready for users.
 
 ## Setup Verified Solution (Recommended)
 
