@@ -16,4 +16,6 @@ This layout is for backend programming without website UI. This would only inclu
 
 This would not include anything, except for a terminal. Best for Linux/bash labs where you want users to exclusively work with terminals only.
 
-_Note: In future, students would be able to change the default layout once the lab as booted._
+:::tip
+You can configure the layout through `.cdmrc` file too. More information [here](/docs/concepts/cdmrc#playground-view)
+:::

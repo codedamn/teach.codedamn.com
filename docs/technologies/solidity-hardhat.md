@@ -1,5 +1,7 @@
 # How to create an interactive Solidity lab with Hardhat?
 
+<!--@include: ./../_components/TechnologyIntro.md-->
+
 We'll divide this part into 5 sections:
 
 1. Creating lab metadata

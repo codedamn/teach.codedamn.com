@@ -1,5 +1,7 @@
 # How to create an interactive Python lab with Pytest?
 
+<!--@include: ./../_components/TechnologyIntro.md-->
+
 We'll divide this part into 5 sections:
 
 1. Creating lab metadata
@@ -127,6 +129,7 @@ set -e 1
 mkdir -p /home/damner/code/__labtests
 
 mv $TEST_FILE_NAME /home/damner/code/__labtests/pytest.py
+echo "" > /home/damner/code/__labtests/__init__.py
 
 # process results file
 cat > /home/damner/code/__labtests/processPythonResults.js << EOF
@@ -136,7 +139,7 @@ require('fs').writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(an
 EOF
 
 # run test
-python3 -m pytest --json-report /home/damner/code/__labtests/pytest.py || true
+pytest --json-report /home/damner/code/__labtests/pytest.py || true
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
 node /home/damner/code/__labtests/processPythonResults.js
