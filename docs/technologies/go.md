@@ -74,7 +74,7 @@ mv $TEST_FILE_NAME /home/damner/code/codedamn_evaluation_test.go
 # run test
 cd /home/damner/code
 go mod init codedamn # assuming you used "codedamn" as the package
-go test -json -parallel 1 > codedamn_evaluation_output.json
+go test -json -parallel 1 > codedamn_evaluation_output.json || true
 
 # process results file
 cat > processGoResults.js << EOF
