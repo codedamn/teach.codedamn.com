@@ -68,21 +68,23 @@ We have to write a boolean array to the file `$UNIT_TEST_OUTPUT_FILE`. Since go 
 ```sh
 #!/bin/bash
 set -e 1
-
-mv $TEST_FILE_NAME /home/damner/code/codedamn_evaluation_test.go
-
-# run test
+echo "Hello from test runner"
+echo $(pwd)
+echo "---- Navigating to /code/damner/code"
 cd /home/damner/code
-go mod init codedamn # assuming you used "codedamn" as the package
-go test -json -parallel 1 > codedamn_evaluation_output.json
+echo $(pwd)
+
+go version
+mv $TEST_FILE_NAME /home/damner/code/codedamn_evaluation_test.go
+go test -json -parallel 1 > codedamn_evaluation_output.json || true;
 
 # process results file
 cat > processGoResults.js << EOF
 const fs = require('fs')
 
 // Read the test results file into memory as a string
-const testResults = fs.readFileSync('./codedamn_evaluation_output.json', 'utf8').filter(Boolean)
-const lines = testResults.split('\n')
+const testResults = fs.readFileSync('./codedamn_evaluation_output.json', 'utf8')
+const lines = testResults.replace(/\n+$/, "").split('\n')
 
 // Create an empty array to store the pass/fail status of each test
 const results = []
@@ -109,7 +111,6 @@ node processGoResults.js
 # remove files
 rm /home/damner/code/codedamn_evaluation_test.go codedamn_evaluation_output.json processGoResults.js
 ```
-
 Let's explain what's going on here:
 
 -   We copy our test script (that we will write in next step) in the same directory as user code `/home/damner/code`. This way we can access user packages comfortably.
