@@ -26,7 +26,15 @@ The `tabs` field in the `.cdmrc` is an array of strings. Once specified, wheneve
 
 This is for a good UX when users don't know what should be a good entry point for the project.
 
-We at codedamn do this on our exercise labs and some default playground repos. You can customize this behavior or disable it completely by passing an empty array `[]` or just removing the key altogether.
+We at codedamn do this on our codelabs and some default playground repos. You can customize this behavior or disable it completely by passing an empty array `[]` or just removing the key altogether.
+
+You can also optionally specify a line number and column number separated by a `#` symbol. This will automatically place the cursor at the specified position. Here's how a modified version could look like:
+
+```yaml
+tabs: ['src/index.html#22:10', 'src/folder/script1.js#2:55', 'README.md']
+```
+
+The config above will open `index.html` file at line number 22 and column number 10 the first time user opens it. Similarly, for `script1.js` file above, it'll open at line number 2 and column number 55.
 
 ## Live browser reloading
 
@@ -89,7 +97,12 @@ Here's a dummy config file that uses all the options we have currently:
 
 ```yaml
 # terminals
-terminals: ["cd client && yarn && yarn start","cd server && yarn && yarn dev","echo \"We're ready\""]
+terminals:
+    [
+        'cd client && yarn && yarn start',
+        'cd server && yarn && yarn dev',
+        'echo "We''re ready"',
+    ]
 # other config
 tabs: ['README.md']
 run-button: clear && node $$file
