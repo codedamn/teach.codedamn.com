@@ -8,7 +8,6 @@ While instructors can include links to free, relevant educational content, it sh
 
 -   You shall send only four educational announcements per course per month to students enrolled in the course.
 -   You shall only include information relevant to your course topic.
--   You shall only send educational announcements from courses where you are a visible instructor. For more information on instructor permissions and how to edit them, please click here.
 -   You shall include educational external links, as long as it doesn’t require students to provide personal information to you, the instructor. Linking to reputable third party sites that keep student information secure (e.g., Amazon, or sites that require signing up through Google, Twitter etc.) are allowed. If there is a link that you’re unsure about using, send us an email to support@codedamn.com, and we’ll be happy to look into it.
 -   You shall not include links or references to paid content off Codedamn.
 -   You shall not include links or references to any sites that request money or personal information from students.
