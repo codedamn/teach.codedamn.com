@@ -106,15 +106,15 @@ set -e 1
 # Install vitest and testing util
 cd /home/damner/code
 yarn add vite@3 vitest@0.22.1 --dev
-mkdir -p /home/damner/code/__labtests
+mkdir -p /home/damner/code/.labtests
 
 # Move test file
-mv $TEST_FILE_NAME /home/damner/code/__labtests/nodecheck.test.js
+mv $TEST_FILE_NAME /home/damner/code/.labtests/nodecheck.test.js
 
 # setup file
 
 # vitest config file
-cat > /home/damner/code/__labtests/config.js << EOF
+cat > /home/damner/code/.labtests/config.js << EOF
 import { defineConfig } from 'vite'
 export default defineConfig({
 	plugins: [],
@@ -125,7 +125,7 @@ export default defineConfig({
 EOF
 
 # process.js file
-cat > /home/damner/code/__labtests/process.js << EOF
+cat > /home/damner/code/.labtests/process.js << EOF
 const fs = require('fs')
 const payload = require('./payload.json')
 const answers = payload.testResults[0].assertionResults.map(test => test.status === 'passed')
@@ -133,17 +133,17 @@ fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
 EOF
 
 # run test
-yarn vitest run --config=/home/damner/code/__labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/__labtests/payload.json || true
+yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true
 
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/__labtests/process.js
+node /home/damner/code/.labtests/process.js
 ```
 
 Let's understand what the above evaluation script is doing:
 
 -   We navigate to users' default code directory and install `vitest` and `vite`. We do this because we'll use `vitest` as the test runner.
--   We then move the cloned test file (more on this in the next step) inside `__labtests` folder. This folder is hidden from the user in the GUI while test is running.
+-   We then move the cloned test file (more on this in the next step) inside `.labtests` folder. This folder is hidden from the user in the GUI while test is running.
 -   We create a custom configuration for vite which would be read by vitest for testing.
 -   We then create a `process.js` file that would read the results written by vitest and process them to write them on a file inside `$UNIT_TEST_OUTPUT_FILE` environment variable. This is important because this file is read by the playground to evaluate whether the challenges passed or failed.
 -   Whatever your mapping of final JSON boolean array written in `process.env.UNIT_TEST_OUTPUT_FILE` is, it is matched exactly to the results on the playground. For example, if the array written is `[true, false, true, true]`, the following would be the output on playground:

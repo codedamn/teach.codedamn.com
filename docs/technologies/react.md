@@ -154,18 +154,18 @@ set -e 1
 # Install vitest and testing util
 cd /home/damner/code
 yarn add vitest@0.22.1 jsdom@20.0.0 @testing-library/jest-dom@5.16.4 @testing-library/react@13.3.0 --dev
-mkdir -p /home/damner/code/__labtests
+mkdir -p /home/damner/code/.labtests
 
 # Move test file
-mv $TEST_FILE_NAME /home/damner/code/__labtests/reactcheck.test.jsx
+mv $TEST_FILE_NAME /home/damner/code/.labtests/reactcheck.test.jsx
 
 # setup file
-cat > /home/damner/code/__labtests/setup.js << EOF
+cat > /home/damner/code/.labtests/setup.js << EOF
 import '@testing-library/jest-dom'
 EOF
 
 # vitest config file
-cat > /home/damner/code/__labtests/config.js << EOF
+cat > /home/damner/code/.labtests/config.js << EOF
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -175,13 +175,13 @@ export default defineConfig({
     test: {
         globals: true,
         environment: 'jsdom',
-        setupFiles: '/home/damner/code/__labtests/setup.js',
+        setupFiles: '/home/damner/code/.labtests/setup.js',
     }
 })
 EOF
 
 # process.js file
-cat > /home/damner/code/__labtests/process.js << EOF
+cat > /home/damner/code/.labtests/process.js << EOF
 const fs = require('fs')
 const payload = require('./payload.json')
 const answers = payload.testResults[0].assertionResults.map(test => test.status === 'passed')
@@ -190,10 +190,10 @@ fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
 EOF
 
 # run test
-yarn vitest run --config=/home/damner/code/__labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/__labtests/payload.json || true
+yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/__labtests/process.js
+node /home/damner/code/.labtests/process.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
@@ -201,9 +201,9 @@ You might need to have a little understanding of bash scripting. Let us understa
 -   With `set -e 1` we effectively say that the script should stop on any errors
 -   We then navigate to user default directory `/home/damner/code` and then install the required NPM packages. Note that this assumes we already have `vite` installed. If you're using a different react setup (like `create-react-app`), you might have to install `vite` as well.
 -   You can install additional packages here if you want. They would only be installed the first time user runs the test. On subsequent runs, it can reuse the installed packages (since they are not removed at the end of testing)
--   Then we create a `__labtests` folder inside of the `/home/damner/code` user code directory. Note that `__labtests` is a special folder that can be used to place your test code. This folder will not be visible in the file explorer user sees, and the files placed in this folder are not "backed up to cloud" for user.
--   We move the test file you wrote earlier (in last step) to `/home/damner/code/__labtests/reactcheck.test.jsx`. Note that it is important to give it an extension of `.test.jsx` for vitest to pick it as a JSX test file.
--   We then create another setup file `/home/damner/code/__labtests/setup.js` with just `jsdom` as the import. This is because vitest can then use JSDOM to parse the DOM without browser. More information about this [setup file can be found in vitest docs here](https://vitest.dev/config/#setupfiles).
+-   Then we create a `.labtests` folder inside of the `/home/damner/code` user code directory. Note that `.labtests` is a special folder that can be used to place your test code. This folder will not be visible in the file explorer user sees, and the files placed in this folder are not "backed up to cloud" for user.
+-   We move the test file you wrote earlier (in last step) to `/home/damner/code/.labtests/reactcheck.test.jsx`. Note that it is important to give it an extension of `.test.jsx` for vitest to pick it as a JSX test file.
+-   We then create another setup file `/home/damner/code/.labtests/setup.js` with just `jsdom` as the import. This is because vitest can then use JSDOM to parse the DOM without browser. More information about this [setup file can be found in vitest docs here](https://vitest.dev/config/#setupfiles).
 -   We then also create a custom vite config file as `config.js`. This is because we don't want to override your (or users') custom `vite.config.js` file if present. This file only loads `jsdom` and marks the `globals: true` hence importing `describe`, `test`, etc. automatically available without importing. More information about the configuration can be found here in [vitest docs](https://vitest.dev/config/#globals).
 -   We then create a `process.js` file that can be used to process our results into a single file of boolean values. This is important because on the playground page, the way challenges work, is that they get green or red based on a JSON boolean array written inside the file in environment variable: `$UNIT_TEST_OUTPUT_FILE`
 -   For example, once the test run succeeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)

@@ -126,13 +126,13 @@ Therefore, your testing script would look like as follows:
 #!/bin/bash
 set -e 1
 
-mkdir -p /home/damner/code/__labtests
+mkdir -p /home/damner/code/.labtests
 
-mv $TEST_FILE_NAME /home/damner/code/__labtests/pytest.py
-echo "" > /home/damner/code/__labtests/__init__.py
+mv $TEST_FILE_NAME /home/damner/code/.labtests/pytest.py
+echo "" > /home/damner/code/.labtests/__init__.py
 
 # run test
-cd /home/damner/code/__labtests
+cd /home/damner/code/.labtests
 pytest --json-report pytest.py || true
 
 # process results file
@@ -145,16 +145,16 @@ EOF
 
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/__labtests/processPythonResults.js
+node /home/damner/code/.labtests/processPythonResults.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
 
 -   With `set -e 1` we effectively say that the script should stop on any errors
 -   You can install additional packages here if you want. They would only be installed the first time user runs the test. On subsequent runs, it can reuse the installed packages (since they are not removed at the end of testing)
--   Then we create a `__labtests` folder inside of the `/home/damner/code` user code directory. Note that `__labtests` is a special folder that can be used to place your test code. This folder will not be visible in the file explorer user sees, and the files placed in this folder are not "backed up to cloud" for user.
--   We move the test file you wrote earlier (in last step) to `/home/damner/code/__labtests/pytest.py`.
--   We then create another setup file `/home/damner/code/__labtests/processPythonResults.js`. This is because we need to parse the results outputted by the Python testing utility to reflect it on the playgrounds. You may as well create this file in python (reading the JSON report and outputting a boolean array in a file stored in env `$UNIT_TEST_OUTPUT_FILE`)
+-   Then we create a `.labtests` folder inside of the `/home/damner/code` user code directory. Note that `.labtests` is a special folder that can be used to place your test code. This folder will not be visible in the file explorer user sees, and the files placed in this folder are not "backed up to cloud" for user.
+-   We move the test file you wrote earlier (in last step) to `/home/damner/code/.labtests/pytest.py`.
+-   We then create another setup file `/home/damner/code/.labtests/processPythonResults.js`. This is because we need to parse the results outputted by the Python testing utility to reflect it on the playgrounds. You may as well create this file in python (reading the JSON report and outputting a boolean array in a file stored in env `$UNIT_TEST_OUTPUT_FILE`)
 -   This is important because on the playground page, the way challenges work, is that they get green or red based on a JSON boolean array written inside the file in environment variable: `$UNIT_TEST_OUTPUT_FILE`
 -   For example, once the test run succeeds, and if you write `[true,false,true,true]` inside `$UNIT_TEST_OUTPUT_FILE`, it would reflect as PASS, FAIL, PASS for 3 challenges available inside codedamn playground UI (as shown below)
 

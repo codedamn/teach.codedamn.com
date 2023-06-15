@@ -88,7 +88,24 @@ Since we have already written a pure evaluation script that runs and finally wri
 The full path of the script is made available at run-time with another environment variable called `TEST_FILE_NAME`. Therefore, all we have to do is write the following in the evaluation script area:
 
 ```sh
-node $TEST_FILE_NAME
+#!/bin/bash
+set -e 1
+
+mkdir -p /home/damner/code/.labtests
+
+cat > /home/damner/code/.labtests/package.json << EOF
+{
+    "type": "module"
+}
+EOF
+
+cd /home/damner/code/.labtests
+mv $TEST_FILE_NAME ./nodecheck.test.js
+
+# import puppeteer doesn't work without it
+npm link puppeteer
+
+node nodecheck.test.js 2>&1 | tee evaluationscript.log
 ```
 
 This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
@@ -117,86 +134,109 @@ The moment you select the Node.js (Puppeteer), the following code should appear 
 
 ```js
 // !! Boilerplate code starts
-const fs = require('fs')
-const puppeteer = require('puppeteer')
+import fs from 'node:fs'
+import puppeteer from 'puppeteer'
 
-async function run() {
-	// results is a boolean[] that maps challenge results shown to user
-	const results = []
+// testlog is a log of test results
+const testlog = []
 
-	// launch the headless browser for testing
-	const browser = await puppeteer.launch({
-		executablePath: '/usr/bin/google-chrome',
-		headless: true,
-		args: [
-			'--no-sandbox',
-			'--disable-setuid-sandbox',
-			'--disable-dev-shm-usage',
-			'--disable-accelerated-2d-canvas',
-			'--no-first-run',
-			'--no-zygote',
-			'--single-process',
-			'--disable-gpu',
-		],
-	})
-	page = await browser.newPage()
+// launch the headless browser for testing
+const browser = await puppeteer.launch({
+	executablePath: '/usr/bin/google-chrome',
+	headless: true,
+	args: [
+		'--no-sandbox',
+		'--disable-setuid-sandbox',
+		'--disable-dev-shm-usage',
+		'--disable-accelerated-2d-canvas',
+		'--no-first-run',
+		'--no-zygote',
+		'--single-process',
+		'--disable-gpu',
+	],
+})
+const page = await browser.newPage()
 
-	// wait for server to come online
-	await page.goto('http://localhost:1337')
+// wait for server to come online
+await page.goto('http://localhost:1337')
 
-	// add jQuery and chai for unit testing support if you want
-	await Promise.all([
-		page.addScriptTag({
-			url: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
-		}),
-		page.addScriptTag({
-			url: 'https://cdnjs.cloudflare.com/ajax/libs/chai/4.2.0/chai.min.js',
-		}),
-	])
+// add jQuery and chai for unit testing support if you want
+await Promise.all([
+	page.addScriptTag({
+		url: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
+	}),
+	page.addScriptTag({
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/chai/4.2.0/chai.min.js',
+	}),
+])
 
-	// !! Boilerplate code ends
+// add chai-dom
+await page.addScriptTag({
+	url: 'https://cdn.jsdelivr.net/npm/chai-dom@1.11.0/chai-dom.min.js',
+})
 
-	// Start your tests here in individual try-catch block
+// !! Boilerplate code ends
 
-	try {
-		await page.evaluate(async () => {
-			const assert = window.chai.assert
-			assert(
+// Start your tests here in individual try-catch block
+
+{
+	const result = await page.evaluate(async () => {
+		const { expect } = window.chai
+		try {
+			expect(
 				document.body.innerHTML.toLowerCase().includes('hello world')
-			)
-		})
-		console.log('Test #1 passed!')
-		results.push(true)
-	} catch (error) {
-		console.log('Test #1 failed! Did you do <this>?')
-		results.push(false)
-	}
+			).to.be.true
+			return { status: 'pass' }
+		} catch (error) {
+			return {
+				status: 'error',
+				error: error.message || 'Challenge failed',
+			}
+		}
+	})
 
-	try {
-		await page.evaluate(async () => {
-			const assert = window.chai.assert
-			assert(
+	testlog.push(result)
+}
+
+{
+	const result = await page.evaluate(async () => {
+		const { expect } = window.chai
+		try {
+			expect(
 				document.body.innerHTML
 					.toLowerCase()
 					.includes('hello world again')
-			)
-		})
-		console.log('Test #1 passed!')
-		results.push(true)
-	} catch (error) {
-		console.log('Test #1 failed! Did you do <this>?')
-		results.push(false)
-	}
+			).to.be.true
+			return { status: 'pass' }
+		} catch (error) {
+			return {
+				status: 'error',
+				error: error.message || 'Challenge failed',
+			}
+		}
+	})
 
-	// End your tests here
-	fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(results))
-	await browser.close().catch((err) => {})
-
-	// Exit the process
-	process.exit(0)
+	testlog.push(result)
 }
-run()
-// !! Boilerplate code ends
+
+// very important for the final length of \`testlog\` array to match the number of challenges, in this case - 2.
+
+// write the test log
+fs.writeFileSync(
+	'/home/damner/code/.labtests/testlog.json',
+	JSON.stringify(testlog)
+)
+
+// write the results array boolean. this will map to passed or failed challenges depending on the boolean value at the challenge index
+fs.writeFileSync(
+	process.env.UNIT_TEST_OUTPUT_FILE,
+	JSON.stringify(testlog.map((result) => result.status === 'pass'))
+)
+
+await browser.close().catch((err) => {})
+
+// Exit the process
+process.exit(0)
 ```
 
 Let us understand what is happening here exactly:
