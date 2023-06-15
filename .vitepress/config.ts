@@ -122,9 +122,12 @@ export default {
 						text: 'Java',
 						link: '/docs/technologies/java-junit',
 					},
+					{
+						text: 'AWS Labs',
+						link: '/docs/technologies/aws',
+					},
 				],
 			},
-
 		],
 
 		footer: {
