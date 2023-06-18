@@ -110,3 +110,17 @@ export default async function ({ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_R
 ## How to test AWS Sandbox?
 
 Currently, only Pro users can use AWS cloud sandboxes. You can signup for a Pro account and test your labs, or if you are far ahead in your course creation and want a free Pro account, <a href="https://codedamn.com/contact">contact our support</a>.
+
+## Which services are enabled?
+
+We enable services as required by instructors. Currently the following services have been enabled on AWS Sandbox accounts:
+
+- EC2
+- API Gateway
+- Lambda Functions
+- Cloudfront
+- S3
+- Cloudformation
+- Cloudwatch
+
+If you plan on creating a course that uses a service that is not listed above, <a href="https://codedamn.com/contact">contact our support</a> and we would be happy to enable it.
