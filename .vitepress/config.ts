@@ -1,16 +1,11 @@
-export default {
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+	lang: 'en-US',
 	title: 'Codedamn Docs',
 	description: 'Build interactive coding courses on codedamn',
-	lastUpdated: true,
-	cleanUrls: true,
+
 	themeConfig: {
-		editLink: {
-			pattern:
-				'https://github.com/codedamn/teach.codedamn.com/edit/main/:path',
-			text: 'Edit this page on GitHub',
-		},
-		siteTitle: 'Codedamn Docs',
-		logo: 'https://codedamn.com/assets/images/favicons/favicon-96x96.png',
 		sidebar: [
 			{
 				text: 'Getting Started',
@@ -18,21 +13,21 @@ export default {
 				items: [
 					{
 						text: 'Why interactive?',
-						link: '/docs/why-interactive',
+						link: '/docs/why-interactive'
 					},
 					{
 						text: 'Create an instructor account',
-						link: '/docs/create-account',
+						link: '/docs/create-account'
 					},
 					{
 						text: 'Setup a course',
-						link: '/docs/setup-course',
+						link: '/docs/setup-course'
 					},
 					{
 						text: 'Crash course [Important]',
-						link: '/docs/crash-course',
-					},
-				],
+						link: '/docs/crash-course'
+					}
+				]
 			},
 			{
 				text: 'Playground Concepts',
@@ -40,17 +35,17 @@ export default {
 				items: [
 					{
 						text: '.cdmrc file',
-						link: '/docs/concepts/cdmrc',
+						link: '/docs/concepts/cdmrc'
 					},
 					{
 						text: 'Environment Variables',
-						link: '/docs/concepts/environment-variables',
+						link: '/docs/concepts/environment-variables'
 					},
 					{
 						text: 'Port Mapping',
-						link: '/docs/concepts/port-mapping',
-					},
-				],
+						link: '/docs/concepts/port-mapping'
+					}
+				]
 			},
 			{
 				text: 'Course Item Guides',
@@ -58,33 +53,33 @@ export default {
 				items: [
 					{
 						text: 'Playgrounds in Article',
-						link: '/docs/instructor-guides/playground-in-article',
+						link: '/docs/instructor-guides/playground-in-article'
 					},
 					{
 						text: 'Regular Quiz',
-						link: '/docs/instructor-guides/add-quiz',
+						link: '/docs/instructor-guides/add-quiz'
 					},
 					{
 						text: 'Quiz in Labs',
-						link: '/docs/instructor-guides/quiz-mode-in-lab',
+						link: '/docs/instructor-guides/quiz-mode-in-lab'
 					},
 					{
 						text: 'Video in Labs',
-						link: '/docs/instructor-guides/video-mode-in-lab',
+						link: '/docs/instructor-guides/video-mode-in-lab'
 					},
 					{
 						text: 'I/O Testing Labs',
-						link: '/docs/instructor-guides/io-testing',
+						link: '/docs/instructor-guides/io-testing'
 					},
 					{
 						text: 'Exam courses',
-						link: '/docs/instructor-guides/exam-courses',
+						link: '/docs/instructor-guides/exam-courses'
 					},
 					{
 						text: 'Pre-sale courses',
-						link: '/docs/instructor-guides/presale-course',
-					},
-				],
+						link: '/docs/instructor-guides/presale-course'
+					}
+				]
 			},
 			{
 				text: 'All Technologies',
@@ -92,47 +87,103 @@ export default {
 				items: [
 					{
 						text: 'Introduction',
-						link: '/docs/technologies/',
+						link: '/docs/technologies/'
 					},
 					{
 						text: 'HTML/CSS',
-						link: '/docs/technologies/html-css',
+						link: '/docs/technologies/html-css'
 					},
 					{
 						text: 'React.js',
-						link: '/docs/technologies/react',
+						link: '/docs/technologies/react'
 					},
 					{
 						text: 'Node.js',
-						link: '/docs/technologies/node',
+						link: '/docs/technologies/node'
 					},
 					{
 						text: 'Python',
-						link: '/docs/technologies/python-pytest',
+						link: '/docs/technologies/python-pytest'
 					},
 					{
 						text: 'Go',
-						link: '/docs/technologies/go',
+						link: '/docs/technologies/go'
 					},
 					{
 						text: 'Solidity',
-						link: '/docs/technologies/solidity-hardhat',
+						link: '/docs/technologies/solidity-hardhat'
 					},
 					{
 						text: 'Java',
-						link: '/docs/technologies/java-junit',
+						link: '/docs/technologies/java-junit'
 					},
 					{
 						text: 'AWS Labs',
-						link: '/docs/technologies/aws',
-					},
-				],
-			},
+						link: '/docs/technologies/aws'
+					}
+				]
+			}
 		],
+
+		socialLinks: [{ icon: 'discord', link: 'https://cdm.sh/creator-discord' }],
+
+		siteTitle: 'Codedamn Docs',
+		logo: '/favicons/ms-icon-310x310.png',
 
 		footer: {
 			message: 'Released under the MIT License.',
-			copyright: 'Copyright © 2015-2023. All Rights Reserved',
+			copyright: `Copyright © codedamn™ 2015-${new Date().getFullYear()} | All rights reserved.`
 		},
+
+		editLink: {
+			pattern: 'https://github.com/codedamn/teach.codedamn.com/edit/main/:path',
+			text: 'Edit this page on GitHub'
+		},
+
+		search: {
+			provider: 'local'
+		}
 	},
-}
+
+	markdown: {
+		lineNumbers: true
+	},
+
+	lastUpdated: true,
+
+	cleanUrls: true,
+
+	head: [
+		[
+			'link',
+			{
+				rel: 'apple-touch-icon',
+				sizes: '180x180',
+				href: '/favicons/apple-icon-180x180.png'
+			}
+		],
+		[
+			'link',
+			{
+				rel: 'icon',
+				type: 'image/png',
+				sizes: '32x32',
+				href: '/favicons/favicon-32x32.png'
+			}
+		],
+		[
+			'link',
+			{
+				rel: 'icon',
+				type: 'image/png',
+				sizes: '16x16',
+				href: '/favicons/favicon-16x16.png'
+			}
+		],
+		['link', { rel: 'manifest', href: '/favicons/manifest.json' }],
+		['link', { rel: 'shortcut icon', href: '/favicons/favicon.ico' }],
+		['meta', { name: 'msapplication-TileColor', content: '#ffffff' }],
+		['meta', { name: 'msapplication-config', content: '/favicons/browserconfig.xml' }],
+		['meta', { name: 'theme-color', content: '#ffffff' }]
+	]
+})

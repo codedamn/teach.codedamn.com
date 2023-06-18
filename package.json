@@ -3,13 +3,14 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"license": "MIT",
-	"dependencies": {
-		"vitepress": "^1.0.0-alpha.47",
-		"vue": "^3.2.47"
-	},
 	"scripts": {
-		"dev": "vitepress dev",
+		"dev": "vitepress dev --port 1337 --host",
 		"build": "vitepress build",
+		"serve": "vitepress serve",
 		"preview": "vitepress preview"
+	},
+	"dependencies": {
+		"vitepress": "^1.0.0-beta.2",
+		"vue": "^3.3.4"
 	}
 }
