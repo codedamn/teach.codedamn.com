@@ -46,7 +46,10 @@ Currently, we support writing evaluation script in Node.js. In future, we will a
 -   AWS SDK (v2 and v3).
 -   `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_REGION` to instantiate any SDK (S3, EC2, etc.).
 
-You must export a default function inside the evaluation script and this function must return a `true` or a `false`. If it returns `true`, we will mark the evaluation as success for the given challenge. If it returns `false`, we will mark the evaluation as failed.
+You must export a default function inside the evaluation script. This function must return an object containing the following properties:
+
+- `status` - A string that can be `success` or `fail` depending on whether the user passed the challenge. If it returns `success`, we will mark the evaluation as success for the given challenge. If it returns `fail`, we will mark the evaluation as failed.
+- `errorMessage` - An optional string value that can be used to display an error message to the user. You can use this property to give the user hints in case the evaluation fails.
 
 Remember that the user cannot skip challenges and have to complete all challenges in a given lab in a step-by-step order.
 
@@ -56,31 +59,51 @@ Here's how a dummy evaluation script might look like:
 // import anything you like from AWS sdk here (v2 or v3)
 import { EC2Client, DescribeSecurityGroupsCommand } from '@aws-sdk/client-ec2'
 
-// import a default async function here. The parameter object is passed by codedamn when calling your function
-export default async function ({
-	AWS_ACCESS_KEY_ID,
-	AWS_SECRET_ACCESS_KEY,
-	AWS_REGION,
-}) {
+/**
+ * @typedef {Object} EvaluatorFunctionParameterType
+ * @property {string} AWS_ACCESS_KEY_ID
+ * @property {string} AWS_SECRET_ACCESS_KEY
+ * @property {string} AWS_REGION
+ */
+
+/**
+ * @typedef {Object} EvaluatorFunctionReturnType
+ * @property {'success' | 'fail'} status - Whether the user passed the challenge
+ * @property {string | undefined} errorMessage - Error message to be shown to the user if the evaluation failed
+ */
+
+/**
+ * Export a default async function here. The parameter object is passed by codedamn when calling your function
+ *
+ * @param {EvaluatorFunctionParameterType} parameters
+ * @returns {EvaluatorFunctionReturnType} result
+ */
+export default async function ({ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION }) {
 	const ec2Client = new EC2Client({
 		credentials: {
 			accessKeyId: AWS_ACCESS_KEY_ID,
-			secretAccessKey: AWS_SECRET_ACCESS_KEY,
+			secretAccessKey: AWS_SECRET_ACCESS_KEY
 		},
-		region: AWS_REGION,
+		region: AWS_REGION
 	})
 
 	const results = await ec2Client.send(new DescribeSecurityGroupsCommand({}))
 	const securityGroups = results.SecurityGroups
 
-	const port_8080_rule_exists = securityGroups.some((sg) =>
-		sg.IpPermissions.some(
-			(rule) => rule.FromPort === 8080 && rule.ToPort === 8080
-		)
+	const port_8080_rule_exists = securityGroups.some(sg =>
+		sg.IpPermissions.some(rule => rule.FromPort === 8080 && rule.ToPort === 8080)
 	)
 
-	// return a boolean value from this function marking success or failure of the lab
-	return port_8080_rule_exists
+	if (!port_8080_rule_exists) {
+		return {
+			status: 'fail',
+			errorMessage: 'Are you sure you have created a security group allowing port 8080?'
+		}
+	}
+
+	return {
+		status: 'success'
+	}
 }
 ```
 
