@@ -90,11 +90,11 @@ export default async function ({ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_R
 	const results = await ec2Client.send(new DescribeSecurityGroupsCommand({}))
 	const securityGroups = results.SecurityGroups
 
-	const port_8080_rule_exists = securityGroups.some(sg =>
+	const isPort8080RuleFound = securityGroups.some(sg =>
 		sg.IpPermissions.some(rule => rule.FromPort === 8080 && rule.ToPort === 8080)
 	)
 
-	if (!port_8080_rule_exists) {
+	if (!isPort8080RuleFound) {
 		return {
 			status: 'fail',
 			errorMessage: 'Are you sure you have created a security group allowing port 8080?'
