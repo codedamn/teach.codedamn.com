@@ -192,10 +192,11 @@ cat > /home/damner/code/.labtests/package.json << EOF
 EOF
 
 # run test
-yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true
+(yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/.labtests/process.js
+cd /home/damner/code/.labtests
+node process.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
