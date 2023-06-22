@@ -192,13 +192,13 @@ The moment you select the Node.js (Vitest), the following code should appear in 
 ```js
 describe('Test runner suite', () => {
 	test('Variable should be exported', async () => {
-		const userVariable = await import('/home/damner/code/index').then(t => t.default)
+		const userVariable = await import('/home/damner/code/index.js').then(t => t.default)
 
 		expect(typeof userVariable === 'undefined').to.be.false
 	})
 
 	test('Variable should have correct value', async () => {
-		const userVariable = await import('/home/damner/code/index').then(t => t.default)
+		const userVariable = await import('/home/damner/code/index.js').then(t => t.default)
 		expect(userVariable === 'Hello World').to.be.true
 	})
 })
