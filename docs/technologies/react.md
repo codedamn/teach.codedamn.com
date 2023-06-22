@@ -98,14 +98,9 @@ The point of having a file like this to provide you with a place where you can w
 The moment you select the React (Vitest), the following code should appear in your editor:
 
 ```jsx
-import '/home/damner/code/node_modules/@testing-library/jest-dom'
-import * as React from '/home/damner/code/node_modules/react'
-import {
-	render,
-	fireEvent,
-	screen,
-	waitFor,
-} from '/home/damner/code/node_modules/@testing-library/react'
+import '@testing-library/jest-dom'
+import * as React from 'react'
+import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 
 // Import the user component if you want
 import App from '/home/damner/code/src/App'
@@ -153,7 +148,7 @@ set -e 1
 
 # Install vitest and testing util
 cd /home/damner/code
-yarn add vitest@0.22.1 jsdom@20.0.0 @testing-library/jest-dom@5.16.4 @testing-library/react@13.3.0 --dev
+yarn add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 @testing-library/react@14.0.0 --dev
 mkdir -p /home/damner/code/.labtests
 
 # Move test file
@@ -182,11 +177,18 @@ EOF
 
 # process.js file
 cat > /home/damner/code/.labtests/process.js << EOF
-const fs = require('fs')
-const payload = require('./payload.json')
+import fs from 'node:fs'
+const payload = JSON.parse(fs.readFileSync('./payload.json', 'utf8'))
 const answers = payload.testResults[0].assertionResults.map(test => test.status === 'passed')
 
 fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
+EOF
+
+# package.json
+cat > /home/damner/code/.labtests/package.json << EOF
+{
+    "type": "module"
+}
 EOF
 
 # run test
