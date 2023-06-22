@@ -105,39 +105,54 @@ set -e 1
 
 # Install vitest and testing util
 cd /home/damner/code
-yarn add vite@3 vitest@0.22.1 --dev
+yarn add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 --dev
 mkdir -p /home/damner/code/.labtests
 
 # Move test file
 mv $TEST_FILE_NAME /home/damner/code/.labtests/nodecheck.test.js
 
 # setup file
+cat > /home/damner/code/.labtests/setup.js << EOF
+import '@testing-library/jest-dom'
+EOF
 
 # vitest config file
 cat > /home/damner/code/.labtests/config.js << EOF
 import { defineConfig } from 'vite'
+
+// https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [],
     test: {
-        globals: true
+        globals: true,
+		environment: 'jsdom',
+		setupFiles: '/home/damner/code/.labtests/setup.js',
     }
 })
 EOF
 
 # process.js file
 cat > /home/damner/code/.labtests/process.js << EOF
-const fs = require('fs')
-const payload = require('./payload.json')
+import fs from 'node:fs'
+const payload = JSON.parse(fs.readFileSync('./payload.json', 'utf8'))
 const answers = payload.testResults[0].assertionResults.map(test => test.status === 'passed')
+
 fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
 EOF
 
-# run test
-yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true
+# package.json
+cat > /home/damner/code/.labtests/package.json << EOF
+{
+    "type": "module"
+}
+EOF
 
+# run test
+(yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
-node /home/damner/code/.labtests/process.js
+cd /home/damner/code/.labtests
+node process.js
 ```
 
 Let's understand what the above evaluation script is doing:
@@ -177,17 +192,13 @@ The moment you select the Node.js (Vitest), the following code should appear in 
 ```js
 describe('Test runner suite', () => {
 	test('Variable should be exported', async () => {
-		const userVariable = await import('/home/damner/code/index').then(
-			(t) => t.default
-		)
+		const userVariable = await import('/home/damner/code/index').then(t => t.default)
 
 		expect(typeof userVariable === 'undefined').to.be.false
 	})
 
 	test('Variable should have correct value', async () => {
-		const userVariable = await import('/home/damner/code/index').then(
-			(t) => t.default
-		)
+		const userVariable = await import('/home/damner/code/index').then(t => t.default)
 		expect(userVariable === 'Hello World').to.be.true
 	})
 })
