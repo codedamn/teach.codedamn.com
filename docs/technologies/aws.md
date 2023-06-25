@@ -122,5 +122,6 @@ We enable services as required by instructors. Currently the following services 
 - S3
 - Cloudformation
 - Cloudwatch
+- Key Management Service (KMS)
 
 If you plan on creating a course that uses a service that is not listed above, <a href="https://codedamn.com/contact">contact our support</a> and we would be happy to enable it.
