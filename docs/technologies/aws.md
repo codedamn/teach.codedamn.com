@@ -48,8 +48,8 @@ Currently, we support writing evaluation script in Node.js. In future, we will a
 
 You must export a default function inside the evaluation script. This function must return an object containing the following properties:
 
-- `status` - A string that can be `success` or `fail` depending on whether the user passed the challenge. If it returns `success`, we will mark the evaluation as success for the given challenge. If it returns `fail`, we will mark the evaluation as failed.
-- `errorMessage` - An optional string value that can be used to display an error message to the user. You can use this property to give the user hints in case the evaluation fails.
+-   `status` - A string that can be `success` or `fail` depending on whether the user passed the challenge. If it returns `success`, we will mark the evaluation as success for the given challenge. If it returns `fail`, we will mark the evaluation as failed.
+-   `errorMessage` - An optional string value that can be used to display an error message to the user. You can use this property to give the user hints in case the evaluation fails.
 
 Remember that the user cannot skip challenges and have to complete all challenges in a given lab in a step-by-step order.
 
@@ -113,15 +113,202 @@ Currently, only Pro users can use AWS cloud sandboxes. You can signup for a Pro 
 
 ## Which services are enabled?
 
-We enable services as required by instructors. Currently the following services have been enabled on AWS Sandbox accounts:
+We enable services as required by instructors.
 
-- EC2
-- API Gateway
-- Lambda Functions
-- Cloudfront
-- S3
-- Cloudformation
-- Cloudwatch
-- Key Management Service (KMS)
+:::info
+Only us-east-1 region is enabled. Every other region is unoperational under codedamn sandbox
+:::
 
-If you plan on creating a course that uses a service that is not listed above, <a href="https://codedamn.com/contact">contact our support</a> and we would be happy to enable it.
+Currently the following services have been enabled on AWS Sandbox accounts
+
+<details>
+<summary>EC2</summary>
+	
+Enabled Services:
+```
+AllocateAddress
+AssignIpv6Addresses
+AssignPrivateIpAddresses
+AssociateAddress
+AssociateDhcpOptions
+AssociateEnclaveCertificateIamRole
+AssociateIamInstanceProfile
+AssociateInstanceEventWindow
+AssociateRouteTable
+AssociateSubnetCidrBlock
+AssociateTrunkInterface
+AssociateVerifiedAccessInstanceWebAcl
+AssociateVpcCidrBlock
+AttachInternetGateway
+AttachNetworkInterface
+AttachVerifiedAccessTrustProvider
+AttachVolume
+AuthorizeSecurityGroupEgress
+AuthorizeSecurityGroupIngress
+CancelConversionTask
+CancelExportTask
+CancelImageLaunchPermission
+CancelImportTask
+CancelSpotInstanceRequests
+ConfirmProductInstance
+CopyFpgaImage
+CopyImage
+CopySnapshot
+CreateDefaultSubnet
+CreateDefaultVpc
+CreateDhcpOptions
+CreateEgressOnlyInternetGateway
+CreateFlowLogs
+CreateImage
+CreateInstanceConnectEndpoint
+CreateInstanceEventWindow
+CreateInstanceExportTask
+CreateInternetGateway
+CreateKeyPair
+CreateLaunchTemplate
+CreateLaunchTemplateVersion
+CreateManagedPrefixList
+CreateNetworkAcl
+CreateNetworkAclEntry
+CreateNetworkInsightsAccessScope
+CreateNetworkInsightsPath
+CreateNetworkInterface
+CreateNetworkInterfacePermission
+CreateReplaceRootVolumeTask
+CreateRestoreImageTask
+CreateRoute
+CreateRouteTable
+CreateSecurityGroup
+CreateSnapshot
+CreateSnapshots
+CreateSpotDatafeedSubscription
+CreateStoreImageTask
+CreateSubnet
+CreateTags
+CreateVolume
+CreateVpc
+CreateVpcEndpoint
+CreateVpcEndpointConnectionNotification
+CreateVpcEndpointServiceConfiguration
+EnableEbsEncryptionByDefault
+EnableFastLaunch
+EnableFastSnapshotRestores
+EnableImageDeprecation
+EnableSerialConsoleAccess
+EnableVolumeIO
+ExportImage
+ImportImage
+ImportInstance
+ImportKeyPair
+ImportSnapshot
+ImportVolume
+MonitorInstances
+MoveAddressToVpc
+PauseVolumeIO
+PutResourcePolicy
+RebootInstances
+RegisterImage
+RegisterInstanceEventNotificationAttributes
+RejectVpcEndpointConnections
+ReleaseAddress
+ReleaseHosts
+ReplaceIamInstanceProfileAssociation
+ReplaceNetworkAclAssociation
+ReplaceNetworkAclEntry
+ReplaceRoute
+ReplaceRouteTableAssociation
+ReportInstanceStatus
+RequestSpotInstances
+ResetAddressAttribute
+ResetEbsDefaultKmsKeyId
+ResetFpgaImageAttribute
+ResetImageAttribute
+ResetInstanceAttribute
+ResetNetworkInterfaceAttribute
+ResetSnapshotAttribute
+RestoreImageFromRecycleBin
+RestoreManagedPrefixListVersion
+RestoreSnapshotFromRecycleBin
+RestoreSnapshotTier
+RevokeSecurityGroupEgress
+RevokeSecurityGroupIngress
+RunInstances
+SendDiagnosticInterrupt
+SendSpotInstanceInterruptions
+StartInstances
+StartNetworkInsightsAccessScopeAnalysis
+StartNetworkInsightsAnalysis
+StartVpcEndpointServicePrivateDnsVerification
+StopInstances
+TerminateInstances
+UnassignIpv6Addresses
+UnassignPrivateIpAddresses
+UnmonitorInstances
+UpdateSecurityGroupRuleDescriptionsEgress
+UpdateSecurityGroupRuleDescriptionsIngress
+Delete*
+Describe*
+Disassociate*
+Deregister*
+Detach*
+Disable*
+Get*
+List*
+Modify*
+```
+</details>
+<details>
+<summary>API Gatewaty</summary>
+
+Full access
+
+</details>
+<details>
+<summary>Lambda Functions</summary>
+
+Full access
+
+</details>
+<details>
+<summary>CloudFront</summary>
+
+Full access
+
+</details>
+
+<details>
+<summary>CloudWatch</summary>
+
+Full access
+
+</details>
+<details>
+<summary>KMS</summary>
+
+Full access
+
+</details>
+<details>
+<summary>IAM</summary>
+
+Full access
+
+</details>
+<details>
+<summary>CloudShell</summary>
+
+Full access
+
+</details>
+<details>
+<summary>STS</summary>
+
+Enabled services:
+
+```
+DecodeAuthorizationMessage
+```
+
+</details>
+
+If you plan on creating a course that uses a service that is not listed above, <a href="https://codedamn.com/contact">contact our support</a> and we would be happy to see if we can enable it.

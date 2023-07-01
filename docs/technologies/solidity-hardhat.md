@@ -82,32 +82,40 @@ Therefore, your testing script would look like as follows:
 
 ```sh
 # move the test file to user directory (hardhat testing util requires it)
-mkdir -p $USER_CODE_DIR/test
-mv $TEST_FILE_NAME $USER_CODE_DIR/test
+mkdir -p /home/damner/code/test
+mkdir -p /home/damner/code/.labtests
+mv $TEST_FILE_NAME /home/damner/code/test/codedamn-evaluation.test.js
 
 # run hardhat testing util assuming we have correct mocha settings
-cd $USER_CODE_DIR
-yarn --silent hardhat test > $UNIT_TEST_OUTPUT_FILE
+cd /home/damner/code
+yarn --silent hardhat test 2>&1 > /home/damner/code/.labtests/payload.json
 
-# run a light node script to extract out results and write them back in expected format
+# process.js - run a light node script to extract out results and write them back in expected format
+cat > /home/damner/code/.labtests/process.js << EOF
+import fs from 'node:fs'
 
-cat > /home/damner/.test/process-results.js << EOF
-const fs = require('fs')
-const fileData = fs.readFileSync(process.env.UNIT_TEST_OUTPUT_FILE, { encoding: 'utf8' })
+const fileData = fs.readFileSync('/home/damner/code/.labtests/payload.json', { encoding: 'utf8' })
 const payload = JSON.parse(fileData.slice(fileData.indexOf('{')))
-const answers = payload?.tests?.map((result, i) => {
+const answers = payload?.tests?.map(result => {
     if(result.err.stack) {
         console.error(result.err.message)
         return false
     } else {
-        console.log(\`Test ${i} passed\`)
+        console.log('Test passed')
         return true
     }
 }) || []
 fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
 EOF
 
-node /home/damner/.test/process-results.js
+# package.json
+cat > /home/damner/code/.labtests/package.json << EOF
+{
+    "type": "module"
+}
+EOF
+
+node /home/damner/code/.labtests/process.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
@@ -124,8 +132,8 @@ module.exports = {
 	solidity: '0.8.4',
 	mocha: {
 		// * the reporter here needs to be JSON
-		reporter: 'json',
-	},
+		reporter: 'json'
+	}
 }
 ```
 
