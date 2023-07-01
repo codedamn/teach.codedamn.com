@@ -258,7 +258,7 @@ Modify*
 ```
 </details>
 <details>
-<summary>API Gatewaty</summary>
+<summary>API Gateway</summary>
 
 Full access
 
