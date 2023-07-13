@@ -36,22 +36,6 @@ tabs: ['src/index.html#22:10', 'src/folder/script1.js#2:55', 'README.md']
 
 The config above will open `index.html` file at line number 22 and column number 10 the first time user opens it. Similarly, for `script1.js` file above, it'll open at line number 2 and column number 55.
 
-## Live browser reloading
-
-```yaml
-live-reload-browser: false
-```
-
-Remember how I mentioned that we try to keep codedamn playgrounds as close as possible to your local development environments? That is great as it keeps you in sync with how things should work locally. However sometimes it is easier to have a little magic at hand - for example - reloading your browser anytime there is a change in your HTML file.
-
-On codedamn playgrounds, when you choose a playground that uses `html-css` docker image as the base image, we automagically reload your browser window to reflect new changes.
-
-This is great, however, there are some playgrounds like Next.js and React.js that also uses the same underlying `html-css` docker image. However, unlike plain vanilla HTML, CSS, JavaScript - those playgrounds do not need live reloading from us as those frameworks ship with Hot Module Replacement (HMR) or live reloading within their own source codes.
-
-Therefore, you can disable platform-level live reloading using the syntax shown above.
-
-The TL;DR of this block is - if you feel the embedded webview on your playground is refreshing on every change, you can disable it setting `live-reload-browser` as `false`
-
 ## Playground view
 
 ```yaml
@@ -106,6 +90,5 @@ terminals:
 # other config
 tabs: ['README.md']
 run-button: clear && node $$file
-live-reload-browser: false
 browser-link: https://wikipedia.org
 ```
