@@ -138,7 +138,7 @@ Evaluation script is actually what runs when the user on the codedamn playground
 
 Remember that we're using React Vite playground setup. This means we can assume that we already have vite installed.
 
-However, we still need to setup a lot of things: `jsdom`, `vitest`, and `react-testing-library`. Therefore, we can write our evaluation bash script to install all of this and run our tests. To help you set it up, we maintain a [repository of evaluation scripts](https://github.com/codedamn/curriculum-testing-scripts). Here's how the React vitest script looks like:
+However, we still need to setup a lot of things: `jsdom`, `vitest`, and `react-testing-library`. Therefore, we can write our evaluation bash script to install all of this and run our tests. Here's how the React vitest script looks like:
 
 ```sh
 #!/bin/bash
