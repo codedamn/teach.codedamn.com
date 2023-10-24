@@ -128,12 +128,15 @@ set -e 1
 
 mkdir -p /home/damner/code/.labtests
 
-mv $TEST_FILE_NAME /home/damner/code/.labtests/pytest.py
+mv $TEST_FILE_NAME /home/damner/code/.labtests/user-test-code.py
 echo "" > /home/damner/code/.labtests/__init__.py
+
+# Install pytest
+pip3 install pytest pytest-json-report
 
 # run test
 cd /home/damner/code/.labtests
-pytest --json-report pytest.py || true
+pytest --json-report user-test-code.py || true
 
 # process results file
 cat > processPythonResults.js << EOF
