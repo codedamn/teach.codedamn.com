@@ -1,6 +1,7 @@
 {
 	"name": "teach.codedamn.com",
 	"version": "1.0.0",
+	"type": "module",
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
@@ -10,7 +11,7 @@
 		"preview": "vitepress preview"
 	},
 	"dependencies": {
-		"vitepress": "^1.0.0-beta.2",
-		"vue": "^3.3.4"
+		"vitepress": "^1.0.0-rc.24",
+		"vue": "^3.3.6"
 	}
 }

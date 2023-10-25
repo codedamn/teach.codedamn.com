@@ -106,6 +106,10 @@ export default defineConfig({
 						link: '/docs/technologies/python-pytest'
 					},
 					{
+						text: 'SQL',
+						link: '/docs/technologies/sql'
+					},
+					{
 						text: 'Go',
 						link: '/docs/technologies/go'
 					},
@@ -131,8 +135,7 @@ export default defineConfig({
 		logo: '/favicons/ms-icon-310x310.png',
 
 		footer: {
-			message: 'Released under the MIT License.',
-			copyright: `Copyright © codedamn™ 2015-${new Date().getFullYear()} | All rights reserved.`
+			copyright: `Copyright © codedamn ${new Date().getFullYear()}. All rights reserved.`
 		},
 
 		editLink: {

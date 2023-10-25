@@ -2,6 +2,10 @@
 	--vp-cdm-red: #e83e3f;
 
 	--vp-c-brand: var(--vp-cdm-red);
+	--vp-c-brand-1: var(--vp-cdm-red);
+	--vp-c-brand-2: var(--vp-cdm-red);
+	--vp-c-brand-3: var(--vp-cdm-red);
+	
 	--vp-c-brand-light: var(--vp-cdm-red);
 	--vp-c-brand-lighter: var(--vp-cdm-red);
 	--vp-c-brand-dark: var(--vp-cdm-red);
