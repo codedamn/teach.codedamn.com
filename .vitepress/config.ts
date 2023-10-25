@@ -106,8 +106,8 @@ export default defineConfig({
 						link: '/docs/technologies/python-pytest'
 					},
 					{
-						text: 'SQL',
-						link: '/docs/technologies/sql'
+						text: 'SQL (SQLite)',
+						link: '/docs/technologies/sqlite'
 					},
 					{
 						text: 'Go',
