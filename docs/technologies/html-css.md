@@ -149,7 +149,10 @@ const answers = payload.suites[0].suites[0].specs.map(spec => spec.ok === true)
 fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
 EOF
 
+node process-results.js
+
 ```
+
 
 This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
 
