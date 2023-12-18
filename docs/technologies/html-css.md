@@ -37,15 +37,14 @@ Container image should be set as "HTML/CSS" for HTML/CSS labs. The following sof
 
 -   `static-server` npm package installed globally: [static-server](https://www.npmjs.com/package/static-server)
 -   Puppeteer installation with Chrome for E2E testing (more on this in Evaluation tab)
--   Node.js v14, Yarn, NPM, Bun.js
+-   Node.js v18, Yarn, NPM, Bun
 
 The following NPM packages (non-exhaustive list) are globally installed:
 
--   puppeteer@10.2.0
+-   puppeteer@20.2.0
 -   static-server@2.2.1
 -   chai@4.3.4
 -   nodemon@2.0.12
--   node-fetch@2.6
 -   yarn@1.22.11
 -   truffle@5.5.13
 -   @drizzle/store@1.5.3
@@ -92,27 +91,69 @@ The full path of the script is made available at run-time with another environme
 set -e 1
 
 mkdir -p /home/damner/code/.labtests
+cd /home/damner/code/.labtests
 
-cat > /home/damner/code/.labtests/package.json << EOF
+cat > package.json << EOF
 {
     "type": "module"
 }
 EOF
 
-cd /home/damner/code/.labtests
-mv $TEST_FILE_NAME ./nodecheck.test.js
+cat > playwright.config.ts << EOF
+import { defineConfig, devices } from '@playwright/test'
+import puppeteer from 'puppeteer'
 
-# import puppeteer doesn't work without it
+export default defineConfig({
+	testDir: '.',
+	fullyParallel: false,
+	forbidOnly: true,
+	retries: 1,
+	workers: 1,
+
+	// Reporter to use
+	reporter: [['list'], ['json', { outputFile: './report.json' }]],
+	
+	use: {
+		baseURL: 'http://localhost:1337/',
+		trace: 'off',
+		launchOptions: {
+			headless: true,
+			executablePath: puppeteer.executablePath(),
+			chromiumSandbox: false
+		}
+	},
+
+	projects: [
+		{
+			name: 'chromium',
+			use: { ...devices['Desktop Chrome'] }
+		}
+	]
+})
+EOF
+
+mv $TEST_FILE_NAME nodecheck.spec.js
+
 npm link puppeteer
+bun install @playwright/test@1.40.1 playwright@1.40.1 fs-extra
 
-node nodecheck.test.js 2>&1 | tee evaluationscript.log
+bunx playwright test || true
+
+# process results file
+cat > process-results.js << EOF
+import fs from 'fs-extra'
+const payload = JSON.parse(fs.readFileSync('./report.json', 'utf-8'))
+const answers = payload.suites[0].suites[0].specs.map(spec => spec.ok === true)
+require('fs').writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(answers))
+EOF
+
 ```
 
 This will make sure we run the full Node.js script and write the results properly for the playground IDE to read. It would look like the following:
 
 ![](/images/html-css/lab-test-command.png)
 
-**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 30 seconds**. Therefore, make sure, all of your testing can happen within 30 seconds.
+**Note:** You can setup a full testing environment in this block of evaluation script (installing more packages, etc. if you want). However, your test file will be timed out **after 60 seconds**. Therefore, make sure, all of your testing can happen within 60 seconds.
 
 ## Step 5 - Test file
 
@@ -126,137 +167,33 @@ You can write anything here. Whatever script you write here, can be executed fro
 
 The point of having a file like this to provide you with a place where you can write your evaluation script.
 
-**For HTML/CSS labs, you can use the default test file of Node.js (Puppeteer) evaluation:**
+**For HTML/CSS labs, you can use the default test file for playwright:**
 
 ![](/images/html-css/lab-test-file-dropdown.png)
 
 The moment you select the Node.js (Puppeteer), the following code should appear in your editor:
 
 ```js
-// !! Boilerplate code starts
-import fs from 'node:fs'
-import puppeteer from 'puppeteer'
+import { expect, test } from '@playwright/test'
 
-// testlog is a log of test results
-const testlog = []
-
-// launch the headless browser for testing
-const browser = await puppeteer.launch({
-	executablePath: '/usr/bin/google-chrome',
-	headless: true,
-	args: [
-		'--no-sandbox',
-		'--disable-setuid-sandbox',
-		'--disable-dev-shm-usage',
-		'--disable-accelerated-2d-canvas',
-		'--no-first-run',
-		'--no-zygote',
-		'--single-process',
-		'--disable-gpu',
-	],
-})
-const page = await browser.newPage()
-
-// wait for server to come online
-await page.goto('http://localhost:1337')
-
-// add jQuery and chai for unit testing support if you want
-await Promise.all([
-	page.addScriptTag({
-		url: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
-	}),
-	page.addScriptTag({
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/chai/4.2.0/chai.min.js',
-	}),
-])
-
-// add chai-dom
-await page.addScriptTag({
-	url: 'https://cdn.jsdelivr.net/npm/chai-dom@1.11.0/chai-dom.min.js',
-})
-
-// !! Boilerplate code ends
-
-// Start your tests here in individual try-catch block
-
-{
-	const result = await page.evaluate(async () => {
-		const { expect } = window.chai
-		try {
-			expect(
-				document.body.innerHTML.toLowerCase().includes('hello world')
-			).to.be.true
-			return { status: 'pass' }
-		} catch (error) {
-			return {
-				status: 'error',
-				error: error.message || 'Challenge failed',
-			}
-		}
+test.describe.serial('Test', () => {
+	test.beforeEach(async ({ page }, testInfo) => {
+		console.log(`Running ${testInfo.title}`)
+		await page.goto('/')
 	})
 
-	testlog.push(result)
-}
-
-{
-	const result = await page.evaluate(async () => {
-		const { expect } = window.chai
-		try {
-			expect(
-				document.body.innerHTML
-					.toLowerCase()
-					.includes('hello world again')
-			).to.be.true
-			return { status: 'pass' }
-		} catch (error) {
-			return {
-				status: 'error',
-				error: error.message || 'Challenge failed',
-			}
-		}
+	test('Stylesheet is linked', async ({ page }) => {
+		const linkElement = page.locator('link[rel="stylesheet"]')
+		expect(linkElement).toBeDefined()
+		expect(await linkElement.getAttribute('href')).toEqual('style.css')
 	})
-
-	testlog.push(result)
-}
-
-// very important for the final length of \`testlog\` array to match the number of challenges, in this case - 2.
-
-// write the test log
-fs.writeFileSync(
-	'/home/damner/code/.labtests/testlog.json',
-	JSON.stringify(testlog)
-)
-
-// write the results array boolean. this will map to passed or failed challenges depending on the boolean value at the challenge index
-fs.writeFileSync(
-	process.env.UNIT_TEST_OUTPUT_FILE,
-	JSON.stringify(testlog.map((result) => result.status === 'pass'))
-)
-
-await browser.close().catch((err) => {})
-
-// Exit the process
-process.exit(0)
+})
 ```
 
-Let us understand what is happening here exactly:
-
--   Remember that we can code anything in this file and then execute it later. In this example, we're writing a Node.js script from scratch.
--   Remember that we already have puppeteer with headless chrome pre-installed in codedamn playgrounds for HTML/CSS. Therefore, we can import it directly.
--   In the first part of `run` function, we start a headless puppeteer browser.
--   We then visit `http://localhost:1337`. At this point, I would highly recommend you to read [How port mapping works for codedamn playgrounds](/docs/concepts/port-mapping), if you haven't yet.
--   From this point onwards, we have some `try-catch` blocks. But why? Because we want to populate an array `results` and then finally write this array to a file inside environment variable `UNIT_TEST_OUTPUT_FILE`
--   Let's say, `[true, false]` is written to the file `process.env.UNIT_TEST_OUTPUT_FILE`. In that case, the first challenge would be marked as passed in the IDE, and the second challenge would be marked as failed:
 
 ![](/images/html-css/playground-tests.png)
 
--   Whatever your mapping of final JSON boolean array written in `process.env.UNIT_TEST_OUTPUT_FILE` is, it is matched exactly to the results on the playground. For example, if the array written is `[true, false, true, true]`, the following would be the output on playground:
-
-![](/images/html-css/playground-tests-2.png)
-
 -   **Note:** If your `results` array contain less values than challenges added back in the UI, the "extra" UI challenges would automatically stay as "false". If you add more challenges in test file, the results would be ignored. Therefore, it is **important** that the `results.length` is same as the number of challenges you added in the challenges UI.
-
--   We then also add jQuery and chai for assisting with testing. Although it is not required as long as you can populate the `results` array properly.
 
 This completes your evaluation script for the lab. Your lab is now almost ready for users.
 
