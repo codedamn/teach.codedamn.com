@@ -104,10 +104,12 @@ import { defineConfig, devices } from '@playwright/test'
 import puppeteer from 'puppeteer'
 
 export default defineConfig({
+	timeout: 10_000,
+	maxFailures: 0,
 	testDir: '.',
 	fullyParallel: false,
 	forbidOnly: true,
-	retries: 1,
+	retries: 0,
 	workers: 1,
 
 	// Reporter to use
