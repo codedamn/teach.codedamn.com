@@ -37,7 +37,7 @@ Container image should be set as "HTML/CSS" for React labs as well. The followin
 
 -   `static-server` npm package installed globally: [static-server](https://www.npmjs.com/package/static-server)
 -   Puppeteer installation with Chrome for E2E testing (more on this in Evaluation tab)
--   Node.js v14, bun, NPM, Bun.js
+-   Node.js v14, yarn, NPM, Bun.js
 
 The following NPM packages (non-exhaustive list) are globally installed:
 
@@ -46,7 +46,7 @@ The following NPM packages (non-exhaustive list) are globally installed:
 -   chai@4.3.4
 -   nodemon@2.0.12
 -   node-fetch@2.6
--   bun@1.22.11
+-   yarn@1.22.11
 -   truffle@5.5.13
 -   @drizzle/store@1.5.3
 -   ganache-cli@6.12.2
