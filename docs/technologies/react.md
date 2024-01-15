@@ -37,7 +37,7 @@ Container image should be set as "HTML/CSS" for React labs as well. The followin
 
 -   `static-server` npm package installed globally: [static-server](https://www.npmjs.com/package/static-server)
 -   Puppeteer installation with Chrome for E2E testing (more on this in Evaluation tab)
--   Node.js v14, Yarn, NPM, Bun.js
+-   Node.js v14, bun, NPM, Bun.js
 
 The following NPM packages (non-exhaustive list) are globally installed:
 
@@ -46,7 +46,7 @@ The following NPM packages (non-exhaustive list) are globally installed:
 -   chai@4.3.4
 -   nodemon@2.0.12
 -   node-fetch@2.6
--   yarn@1.22.11
+-   bun@1.22.11
 -   truffle@5.5.13
 -   @drizzle/store@1.5.3
 -   ganache-cli@6.12.2
@@ -148,7 +148,7 @@ set -e 1
 
 # Install vitest and testing util
 cd /home/damner/code
-yarn add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 @testing-library/react@14.0.0 --dev
+bun add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 @testing-library/react@14.0.0 --dev
 mkdir -p /home/damner/code/.labtests
 
 # Move test file
@@ -192,11 +192,11 @@ cat > /home/damner/code/.labtests/package.json << EOF
 EOF
 
 # run test
-(yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
+(bun vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
 cd /home/damner/code/.labtests
-node process.js
+bun process.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:
@@ -213,7 +213,7 @@ You might need to have a little understanding of bash scripting. Let us understa
 
 ![](/images/html-css/playground-tests-2.png)
 
--   Then we run the actual test using `yarn vitest run` command, specifying the output as JSON (read by `process.js`) and in a single thread (as we want ordered results).
+-   Then we run the actual test using `bun vitest run` command, specifying the output as JSON (read by `process.js`) and in a single thread (as we want ordered results).
 
 -   Finally we run the `process.js` file that writes the correct JSON boolean array on `$UNIT_TEST_OUTPUT_FILE` which is then read by the playground UI and marks the lab challenges as pass or fail.
 
