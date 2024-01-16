@@ -105,7 +105,7 @@ set -e 1
 
 # Install vitest and testing util
 cd /home/damner/code
-yarn add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 --dev
+bun add vitest@0.32.2 jsdom@22.1.0 @testing-library/jest-dom@5.16.5 --dev
 mkdir -p /home/damner/code/.labtests
 
 # Move test file
@@ -148,11 +148,11 @@ cat > /home/damner/code/.labtests/package.json << EOF
 EOF
 
 # run test
-(yarn vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
+(bun vitest run --config=/home/damner/code/.labtests/config.js --threads=false --reporter=json --outputFile=/home/damner/code/.labtests/payload.json || true)  | tee /home/damner/code/.labtests/evaluationscript.log
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
 cd /home/damner/code/.labtests
-node process.js
+bun process.js
 ```
 
 Let's understand what the above evaluation script is doing:
