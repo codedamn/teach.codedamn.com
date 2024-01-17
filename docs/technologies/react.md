@@ -196,7 +196,7 @@ EOF
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
 cd /home/damner/code/.labtests
-bun process.js
+node process.js
 ```
 
 You might need to have a little understanding of bash scripting. Let us understand how the evaluation bash script is working:

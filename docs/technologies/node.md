@@ -152,7 +152,7 @@ EOF
 
 # Write results to UNIT_TEST_OUTPUT_FILE to communicate to frontend
 cd /home/damner/code/.labtests
-bun process.js
+node process.js
 ```
 
 Let's understand what the above evaluation script is doing:
