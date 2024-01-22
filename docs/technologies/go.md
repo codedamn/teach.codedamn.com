@@ -90,10 +90,10 @@ const results = []
 // Loop through each line and parse it as JSON and check if it is a result line
 lines.forEach(line => {
   const output = JSON.parse(line).Output?.trim()
-  const valid = output === 'PASS' || output === 'FAIL'
+  const valid = output.includes('PASS') || output.includes('FAIL')
   if(!valid) return
 
-  const passed = output === 'PASS'
+  const passed = output.includes('PASS')
 
   // Add the pass/fail status to the array
   results.push(passed)
