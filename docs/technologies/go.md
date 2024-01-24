@@ -90,10 +90,11 @@ const results = []
 // Loop through each line and parse it as JSON and check if it is a result line
 lines.forEach(line => {
   const output = JSON.parse(line).Output?.trim()
-  const valid = output.includes('PASS') || output.includes('FAIL')
+  if (output === undefined) return
+  const valid = output.includes("--- PASS") || output.includes("--- FAIL")
   if(!valid) return
 
-  const passed = output.includes('PASS')
+  const passed = output.includes('--- PASS')
 
   // Add the pass/fail status to the array
   results.push(passed)
@@ -102,6 +103,9 @@ lines.forEach(line => {
 // Write results
 fs.writeFileSync(process.env.UNIT_TEST_OUTPUT_FILE, JSON.stringify(results))
 EOF
+
+# removing mod.go before testing the result because if it fails we don't need to remove go.mod manually
+rm go.mod
 
 # process results
 node processGoResults.js
