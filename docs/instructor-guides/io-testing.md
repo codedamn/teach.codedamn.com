@@ -59,7 +59,7 @@ Now that we are done with the verified solution, setting up the test cases in th
 
 You should be able to see a `+ (plus symbol)` beside the test cases section. Clicking on the `+` will give you a new text box to give in the input values.
 
-If you're case requires a large input set (which can be very hard to copy/paste or type on your own) we allow ouro creators to update the inputs using a text file. All files that have `UTF-8` encoding format.
+If you're case requires a large input set (which can be very hard to copy/paste or type on your own) we allow our creators to update the inputs using a text file. All files that have `UTF-8` encoding format.
 
 If the test cases are simple to set up you can set them up normally by typing in the text area.
 
